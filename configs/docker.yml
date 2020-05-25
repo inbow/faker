@@ -1,0 +1,7 @@
+http:
+  host: rtb-mock
+  port: 49385
+
+bid:
+  delay_min: 10
+  delay_max: 200

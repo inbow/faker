@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build && push docker image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get the version
+      id: vars
+      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+    - name: Build the Docker image
+      run: docker build . --file deployments/docker/Dockerfile --tag docker.pkg.github.com/${{github.repository_owner}}/${{github.event.repository.name}}/${{github.event.repository.name}}:${{steps.vars.outputs.tag}} --build-arg NAME=${{github.event.repository.name}} --build-arg VERSION=${{steps.vars.outputs.tag}}
+    - name: Show docker images
+      run: docker images
+    - name: Login to Github Packages Repository
+      run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login docker.pkg.github.com -u ${{ secrets.DOCKER_USER }} --password-stdin
+    - name: Push the image to Github Packages Repository
+      run: docker push docker.pkg.github.com/${{github.repository_owner}}/${{github.event.repository.name}}/${{github.event.repository.name}}:${{steps.vars.outputs.tag}}
