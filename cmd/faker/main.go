@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	Name = "rtb-mock"
+	serviceName = "faker"
 )
 
 func main() {
@@ -33,12 +33,12 @@ func main() {
 	flag.Parse()
 
 	ctx := grace.ShutdownContext(context.Background())
-	ctx = context.WithValue(ctx, env.Name, Name)
+	ctx = context.WithValue(ctx, env.Name, serviceName)
 	ctx = context.WithValue(ctx, env.Version, version)
 	ctx = context.WithValue(ctx, env.Environment, environment)
 
 	logger, err := zapLogger.New(
-		Name,
+		serviceName,
 		version,
 		environment,
 		logLevel,
@@ -59,14 +59,14 @@ func main() {
 		appPath = os.Getenv("APP_PATH")
 	}
 
-	appConfig, err := config.New("yml", appPath+"/configs/"+environment+".yml")
+	appConfig, err := config.NewAppConfig(serviceName, appPath+"configs/"+serviceName+"/"+environment+".yml")
 	if err != nil {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
 
 	gnrtr := generator.New()
 
-	application := app.New(Name, version, environment, appConfig, logger, gnrtr)
+	application := app.New(serviceName, version, environment, appConfig, logger, gnrtr)
 
 	application.Run(ctx)
 	application.Shutdown()

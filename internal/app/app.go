@@ -16,7 +16,7 @@ type (
 		Version     string
 		Environment string
 
-		config *config.Config
+		config *config.AppConfig
 		logger *zap.Logger
 
 		generator generator.IGenerator
@@ -25,7 +25,7 @@ type (
 
 func New(
 	name, version, environment string,
-	config *config.Config,
+	config *config.AppConfig,
 	logger *zap.Logger,
 	generator generator.IGenerator,
 ) *Application {

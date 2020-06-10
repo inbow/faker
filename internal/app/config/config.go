@@ -5,7 +5,7 @@ import (
 )
 
 type (
-	Config struct {
+	AppConfig struct {
 		HTTP struct {
 			Host  string
 			Port  int
@@ -21,19 +21,29 @@ type (
 	}
 )
 
-func New(ct string, path string) (*Config, error) {
-	viper.SetConfigType(ct)
-	viper.SetConfigFile(path)
+func NewAppConfig(serviceName, configFile string) (*AppConfig, error) {
+	config, err := loadConfig(serviceName, configFile)
+	if err != nil {
+		return nil, err
+	}
 
+	return config, nil
+}
+
+func loadConfig(serviceName, configFile string) (*AppConfig, error) {
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix(serviceName)
+	viper.SetConfigFile(configFile)
 	err := viper.ReadInConfig()
 	if err != nil {
 		return nil, err
 	}
 
-	config := Config{}
-	if err = viper.Unmarshal(&config); err != nil {
+	var appConfig AppConfig
+	err = viper.Unmarshal(&appConfig)
+	if err != nil {
 		return nil, err
 	}
 
-	return &config, nil
+	return &appConfig, err
 }
