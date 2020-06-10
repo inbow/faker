@@ -5,11 +5,16 @@ WORKDIR /opt/${NAME}
 COPY . .
 RUN ["make", "build"]
 
-FROM debian:buster
+FROM debian:buster-slim
+ARG NAME
 ARG ENV
 ARG VERSION
-ENV NAME "rtb-mock"
+ARG LOG_LEVEL
+ENV NAME ${NAME}
+ENV ENV ${ENV}
+ENV VERSION ${VERSION}
+ENV LOG_LEVEL ${LOG_LEVEL}
 WORKDIR /opt/${NAME}
-COPY --from=build /opt/${NAME}/configs/*.yml ./configs/
+COPY --from=build /opt/${NAME}/configs/${NAME}/*.yml ./configs/${NAME}/
 COPY --from=build /opt/${NAME}/bin/${NAME} ./${NAME}
-CMD ./${NAME}
+CMD ./${NAME} -e ${ENV} -v ${VERSION} -ll ${LOG_LEVEL}

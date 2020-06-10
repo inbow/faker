@@ -9,7 +9,7 @@ const (
 )
 
 const (
-	BURL = "burl"
-	NURL = "nurl"
-	LURL = "lurl"
+	BURL = "openrtb/burl"
+	NURL = "openrtb/nurl"
+	LURL = "openrtb/lurl"
 )
