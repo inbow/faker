@@ -23,7 +23,7 @@ type (
 		ctx context.Context
 
 		logger *zap.Logger
-		config *config.Config
+		config *config.AppConfig
 
 		generator generator.IGenerator
 	}
@@ -74,7 +74,7 @@ func (h panicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func New(
 	ctx context.Context,
 	logger *zap.Logger,
-	config *config.Config,
+	config *config.AppConfig,
 	generator generator.IGenerator,
 ) <-chan error {
 	return errch.Register(func() error {
