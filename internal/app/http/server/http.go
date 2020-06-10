@@ -114,27 +114,32 @@ func (s *Server) ph(handler http.HandlerFunc) http.Handler {
 }
 
 func (s *Server) handler() *httprouter.Router {
+	apiVersionPath := "/api/v1/"
+
 	return func() *httprouter.Router {
 		router := httprouter.New()
 
-		router.Handler(http.MethodGet, "/propellerads/custom", s.ph(s.PropellerAdsCustom))
-		router.Handler(http.MethodGet, "/propellerads/push", s.ph(s.PropellerAdsPush))
+		router.Handler(http.MethodGet, "/", router.NotFound)
 
-		router.Handler(http.MethodGet, "/zeropark", s.ph(s.ZeroPark))
-		router.Handler(http.MethodGet, "/meetads", s.ph(s.MeetAdsXML))
-		router.Handler(http.MethodGet, "/intango", s.ph(s.IntangoXML))
-		router.Handler(http.MethodGet, "/evadav", s.ph(s.Evadav))
-		router.Handler(http.MethodGet, "/datsun", s.ph(s.Datsun))
-		router.Handler(http.MethodGet, "/volvo", s.ph(s.Volvo))
-		router.Handler(http.MethodGet, "/mazda", s.ph(s.Mazda))
+		router.Handler(http.MethodGet, apiVersionPath+"propellerads/custom", s.ph(s.PropellerAdsCustom))
+		router.Handler(http.MethodGet, apiVersionPath+"propellerads/push", s.ph(s.PropellerAdsPush))
 
-		router.Handler(http.MethodPost, "/openrtb", s.ph(s.OpenRTB))
-		router.Handler(http.MethodPost, "/openrtb/vast", s.ph(s.OpenRTBVast))
-		router.Handler(http.MethodPost, "/openrtb/native", s.ph(s.OpenRTBNative))
-		router.Handler(http.MethodPost, "/openrtb/native/multibid", s.ph(s.OpenRTBNativeMultiBid))
+		router.Handler(http.MethodGet, apiVersionPath+"zeropark", s.ph(s.ZeroPark))
+		router.Handler(http.MethodGet, apiVersionPath+"meetads", s.ph(s.MeetAdsXML))
+		router.Handler(http.MethodGet, apiVersionPath+"intango", s.ph(s.IntangoXML))
+		router.Handler(http.MethodGet, apiVersionPath+"evadav", s.ph(s.Evadav))
+		router.Handler(http.MethodGet, apiVersionPath+"datsun", s.ph(s.Datsun))
+		router.Handler(http.MethodGet, apiVersionPath+"volvo", s.ph(s.Volvo))
+		router.Handler(http.MethodGet, apiVersionPath+"mazda", s.ph(s.Mazda))
 
-		router.Handler(http.MethodGet, "/burl", s.ph(s.Burl))
-		router.Handler(http.MethodGet, "/nurl", s.ph(s.Nurl))
+		router.Handler(http.MethodPost, apiVersionPath+"openrtb", s.ph(s.OpenRTB))
+		router.Handler(http.MethodPost, apiVersionPath+"openrtb/vast", s.ph(s.OpenRTBVast))
+		router.Handler(http.MethodPost, apiVersionPath+"openrtb/native", s.ph(s.OpenRTBNative))
+		router.Handler(http.MethodPost, apiVersionPath+"openrtb/native/multibid", s.ph(s.OpenRTBNativeMultiBid))
+
+		router.Handler(http.MethodGet, apiVersionPath+"openrtb/nurl", s.ph(s.Nurl))
+		router.Handler(http.MethodGet, apiVersionPath+"openrtb/burl", s.ph(s.Burl))
+		router.Handler(http.MethodGet, apiVersionPath+"openrtb/lurl", s.ph(s.Lurl))
 
 		router.Handler(http.MethodGet, "/metrics", promhttp.Handler())
 		router.HandlerFunc(http.MethodGet, "/check", s.check)

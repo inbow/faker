@@ -51,9 +51,7 @@ docker_local_push:
 
 .PHONY: docker_build_push_image
 docker_build_push_image:
-	docker build -t ${DOCKER_IMAGE_NAME}:${VERSION} -f ${DOCKER_APP_FILENAME} --build-arg VERSION=${VERSION} .
-	docker tag ${DOCKER_IMAGE_NAME}:${VERSION} ${DOCKER_IMAGE_NAME}:latest
+	docker build -t ${DOCKER_IMAGE_NAME}:${VERSION} -f ${DOCKER_APP_FILENAME} --build-arg NAME=${NAME} --build-arg VERSION=${VERSION} .
 	docker push ${DOCKER_IMAGE_NAME}:${VERSION}
-	docker push ${DOCKER_IMAGE_NAME}:latest
 	docker image rm ${DOCKER_IMAGE_NAME}:${VERSION}
 	docker image rm ${DOCKER_IMAGE_NAME}:latest

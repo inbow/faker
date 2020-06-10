@@ -102,6 +102,63 @@ func (s *Server) OpenRTBNative(w http.ResponseWriter, r *http.Request) {
 }
 
 var (
-	// nolint:lll, gochecknoglobals
-	openRTBNativeAdm = `{"native":{"ver":"1.2","link":{"url":"https://www.adskeeper.co.uk/"},"assets":[{"id":1,"required":0,"title":{"text":"text"}},{"id":3,"required":0,"img":{"w":360,"h":240,"type":3,"url":"http://main.jpg"}},{"id":4,"required":0,"img":{"w":50,"h":50,"type":1,"url":"http://icon.jpg"}},{"id":2,"required":0,"data":{"type":1,"value":"sponsored by proxeter"}},{"id":5,"required":0,"data":{"type":12,"value":"click me please!"}}],"imptrackers":["https://notify.adskeeper.co.uk/imp"]}}`
+	// nolint:gochecknoglobals
+	openRTBNativeAdm = `
+{
+   "native":{
+      "ver":"1.2",
+      "link":{
+         "url":"https://www.adskeeper.co.uk/"
+      },
+      "assets":[
+         {
+            "id":1,
+            "required":0,
+            "title":{
+               "text":"Clean computer in {country}"
+            }
+         },
+         {
+            "id":3,
+            "required":0,
+            "img":{
+               "w":360,
+               "h":240,
+               "type":3,
+               "url":"http://main.jpg"
+            }
+         },
+         {
+            "id":4,
+            "required":0,
+            "img":{
+               "w":50,
+               "h":50,
+               "type":1,
+               "url":"http://icon.jpg"
+            }
+         },
+         {
+            "id":2,
+            "required":0,
+            "data":{
+               "type":1,
+               "value":"sponsored by proxeter"
+            }
+         },
+         {
+            "id":5,
+            "required":0,
+            "data":{
+               "type":12,
+               "value":"Click me if you live in {city}"
+            }
+         }
+      ],
+      "imptrackers":[
+         "https://notify.adskeeper.co.uk/imp"
+      ]
+   }
+}
+`
 )
