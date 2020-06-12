@@ -59,7 +59,7 @@ func main() {
 		appPath = os.Getenv("APP_PATH")
 	}
 
-	appConfig, err := config.NewAppConfig(serviceName, appPath+"configs/"+serviceName+"/"+environment+".yml")
+	appConfig, err := config.NewAppConfig(serviceName, appPath+"/configs/"+serviceName+"/"+environment+".yml")
 	if err != nil {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
