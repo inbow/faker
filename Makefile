@@ -1,18 +1,19 @@
 # Common
-ORG = oxyd-io
-NAME ?= $(shell basename $(CURDIR))
-VERSION ?= $(shell git tag --points-at HEAD --sort -version:refname | head -1)
+ORG := oxyd-io
+NAME := $(shell basename $(CURDIR))
+VERSION := $(shell git tag --points-at HEAD --sort -version:refname | head -1)
+COMMIT := $(shell git rev-parse --short HEAD)
 
 # Build
-GO_PACKAGE = github.com/${ORG}/${NAME}
-BUILD_CMD ?= CGO_ENABLED=0 go build -o bin/${NAME} -ldflags '-v -w -s' ./cmd/${NAME}
-DEBUG_CMD ?= CGO_ENABLED=0 go build -o bin/${NAME} -gcflags "all=-N -l" ./cmd/${NAME}
+GO_PACKAGE := github.com/${ORG}/${NAME}
+BUILD_CMD := CGO_ENABLED=0 go build -o bin/${NAME} -ldflags '-v -w -s -X main.version=${VERSION}' ./cmd/${NAME}
+DEBUG_CMD := CGO_ENABLED=0 go build -o bin/${NAME} -gcflags "all=-N -l" -ldflags '-X main.version=${COMMIT}' ./cmd/${NAME}
 
 # Docker
-REGISTRY_URL ?= docker.pkg.github.com
-DOCKER_IMAGE_NAME ?= ${REGISTRY_URL}/${ORG}/${NAME}/${NAME}
-DOCKER_APP_FILENAME ?= deployments/docker/Dockerfile
-DOCKER_COMPOSE_FILE ?= deployments/docker-compose/docker-compose.yml
+REGISTRY_URL := docker.pkg.github.com
+DOCKER_IMAGE_NAME := ${REGISTRY_URL}/${ORG}/${NAME}/${NAME}
+DOCKER_APP_FILENAME := deployments/docker/Dockerfile
+DOCKER_COMPOSE_FILE := deployments/docker-compose/docker-compose.yml
 
 # Other
 .DEFAULT_GOAL := build

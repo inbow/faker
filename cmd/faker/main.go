@@ -22,12 +22,15 @@ const (
 	serviceName = "faker"
 )
 
+var (
+	version = "unknown"
+)
+
 func main() {
-	var version, environment, logLevel string
+	var environment, logLevel string
 
 	rand.Seed(time.Now().UnixNano())
 
-	flag.StringVar(&version, "v", "", "version")
 	flag.StringVar(&environment, "e", "", "environment")
 	flag.StringVar(&logLevel, "ll", "info", "logging level")
 	flag.Parse()
