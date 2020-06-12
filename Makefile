@@ -4,7 +4,7 @@ NAME ?= $(shell basename $(CURDIR))
 VERSION ?= $(shell git tag --points-at HEAD --sort -version:refname | head -1)
 
 # Build
-GO_PACKAGE = git.tsdev.tech/adnetwork/${NAME}
+GO_PACKAGE = github.com/${ORG}/${NAME}
 BUILD_CMD ?= CGO_ENABLED=0 go build -o bin/${NAME} -ldflags '-v -w -s' ./cmd/${NAME}
 DEBUG_CMD ?= CGO_ENABLED=0 go build -o bin/${NAME} -gcflags "all=-N -l" ./cmd/${NAME}
 

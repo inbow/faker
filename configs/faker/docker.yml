@@ -1,5 +1,5 @@
 http:
-  host: rtb-mock
+  host: faker
   port: 49385
 
 bid:
