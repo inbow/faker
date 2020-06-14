@@ -9,7 +9,8 @@ require (
 	github.com/json-iterator/go v1.1.6
 	github.com/onsi/ginkgo v1.11.0 // indirect
 	github.com/onsi/gomega v1.8.1 // indirect
-	github.com/prometheus/client_golang v0.9.3
+	github.com/prometheus/client_golang v0.9.4
+	github.com/prometheus/procfs v0.0.3 // indirect
 	github.com/proxeter/errors-channel v0.1.0
 	github.com/savsgio/atreugo/v11 v11.3.1
 	github.com/spf13/pflag v1.0.5 // indirect
