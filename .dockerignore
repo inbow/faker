@@ -1,5 +1,5 @@
 .github
 bin
 deployments
-init
+.gitignore
 README.md
