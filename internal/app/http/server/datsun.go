@@ -5,6 +5,7 @@ import (
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/savsgio/atreugo/v11"
 
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
@@ -24,24 +25,24 @@ type (
 	}
 )
 
-func (s *Server) Datsun(w http.ResponseWriter, r *http.Request) {
+func (s *Server) Datsun(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	_, delay, skip := s.RequestValues(r.URL.Query())
+	_, delay, skip := s.RequestValues(ctx.QueryArgs())
 
 	defer func() {
 		time.Sleep(time.Duration(delay) * time.Millisecond)
 
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(response.StatusCode)
+		ctx.Response.Header.Set("Content-Type", "application/json")
+		ctx.SetStatusCode(response.StatusCode)
 
 		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			_, _ = w.Write(response.Body)
+			ctx.SetBody(response.Body)
 		}
 	}()
 
 	if skip {
 		response.StatusCode = http.StatusNoContent
-		return
+		return nil
 	}
 
 	par := &datsunResponse{
@@ -73,4 +74,6 @@ func (s *Server) Datsun(w http.ResponseWriter, r *http.Request) {
 
 	response.StatusCode = http.StatusOK
 	response.Body = data
+
+	return nil
 }

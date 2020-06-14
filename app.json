@@ -1,0 +1,12 @@
+{
+  "name": "Faker",
+  "description": "External networks response examples mock",
+  "keywords": [
+    "go",
+    "oxyd-io",
+    "faker",
+    "bidding system"
+  ],
+  "website": "https://oxyd.io/apps/faker",
+  "repository": "http://github.com/oxyd-io/faker"
+}
