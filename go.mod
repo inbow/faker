@@ -3,7 +3,7 @@ module github.com/oxyd-io/faker
 go 1.14
 
 require (
-	github.com/Pallinder/go-randomdata v1.1.0
+	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/bsm/openrtb v2.1.2+incompatible
 	github.com/chapsuk/grace v0.5.0
 	github.com/golang/protobuf v1.3.2 // indirect
