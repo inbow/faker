@@ -1,20 +1,19 @@
 package server
 
 import (
-	"bytes"
 	"context"
-	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strconv"
 
-	"github.com/Pallinder/go-randomdata"
-	"github.com/julienschmidt/httprouter"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	errch "github.com/proxeter/errors-channel"
+	"github.com/savsgio/atreugo/v11"
+	"github.com/valyala/fasthttp"
+	"github.com/valyala/fasthttp/reuseport"
 	"go.uber.org/zap"
 
 	"github.com/oxyd-io/faker/internal/app/config"
+	"github.com/oxyd-io/faker/internal/app/env"
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
@@ -28,48 +27,11 @@ type (
 		generator generator.IGenerator
 	}
 
-	panicHandler struct {
-		logger *zap.Logger
-
-		handler http.Handler
-	}
-
 	HandlerResponse struct {
 		StatusCode int
 		Body       []byte
 	}
 )
-
-func (h panicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	defer func() {
-		if err := recover(); err != nil {
-			body, _ := ioutil.ReadAll(r.Body)
-
-			h.logger.Error(
-				"recovered",
-				zap.ByteString("body", body),
-				zap.Any("error", err),
-			)
-
-			w.WriteHeader(http.StatusNoContent)
-			_, _ = w.Write([]byte(""))
-
-			return
-		}
-	}()
-
-	body, _ := ioutil.ReadAll(r.Body)
-	r.Body = ioutil.NopCloser(bytes.NewReader(body))
-
-	h.logger.Info(
-		"http request",
-		zap.String("url", r.URL.String()),
-		zap.Any("headers", r.Header),
-		zap.ByteString("body", body),
-	)
-
-	h.handler.ServeHTTP(w, r)
-}
 
 func New(
 	ctx context.Context,
@@ -90,79 +52,56 @@ func New(
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	server := http.Server{
-		Addr:    ":" + strconv.Itoa(s.config.HTTP.Port),
-		Handler: s.handler(),
+	server := atreugo.New(atreugo.Config{
+		Name: s.ctx.Value(env.Name).(string) + " server",
+
+		Prefork:   true,
+		Reuseport: true,
+
+		GracefulShutdown: true,
+		Compress:         false,
+	})
+
+	ln, err := reuseport.Listen("tcp4", ":"+strconv.Itoa(s.config.HTTP.Port))
+	if err != nil {
+		return err
 	}
+
+	server.GET("/api/v1/zeropark", s.ZeroPark)
+	server.GET("/api/v1/meetads", s.MeetAdsXML)
+	server.GET("/api/v1/intango", s.IntangoXML)
+	server.GET("/api/v1/evadav", s.Evadav)
+	server.GET("/api/v1/datsun", s.Datsun)
+	server.GET("/api/v1/volvo", s.Volvo)
+	server.GET("/api/v1/mazda", s.Mazda)
+	server.GET("/api/v1/propellerads/push", s.PropellerAdsPush)
+	server.GET("/api/v1/propellerads/custom", s.PropellerAdsCustom)
+
+	server.GET("/api/v1/openrtb", s.OpenRTB)
+	server.GET("/api/v1/openrtb/native", s.OpenRTBNative)
+	server.GET("/api/v1/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
+	server.GET("/api/v1/openrtb/burl", s.Burl)
+	server.GET("/api/v1/openrtb/nurl", s.Nurl)
+	server.GET("/api/v1/openrtb/lurl", s.Lurl)
+
+	server.GET("/check", s.check)
+	server.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
 
 	s.logger.Info("Server running", zap.Int("port", s.config.HTTP.Port))
 	select {
-	case <-errch.Register(server.ListenAndServe):
+	case <-errch.Register(func() error { return server.ServeGracefully(ln) }):
 		s.logger.Info("Shutdown server", zap.String("reason", "error"))
-		return server.Shutdown(ctx)
+		return ln.Close()
 	case <-ctx.Done():
 		s.logger.Info("Shutdown server", zap.String("reason", "ctx.Done()"))
-		return server.Shutdown(ctx)
+		return ln.Close()
 	}
 }
 
-func (s *Server) ph(handler http.HandlerFunc) http.Handler {
-	return &panicHandler{
-		logger:  s.logger,
-		handler: handler,
-	}
-}
-
-func (s *Server) handler() *httprouter.Router {
-	apiVersionPath := "/api/v1/"
-
-	return func() *httprouter.Router {
-		router := httprouter.New()
-
-		router.Handler(http.MethodGet, "/", router.NotFound)
-
-		router.Handler(http.MethodGet, apiVersionPath+"propellerads/custom", s.ph(s.PropellerAdsCustom))
-		router.Handler(http.MethodGet, apiVersionPath+"propellerads/push", s.ph(s.PropellerAdsPush))
-
-		router.Handler(http.MethodGet, apiVersionPath+"zeropark", s.ph(s.ZeroPark))
-		router.Handler(http.MethodGet, apiVersionPath+"meetads", s.ph(s.MeetAdsXML))
-		router.Handler(http.MethodGet, apiVersionPath+"intango", s.ph(s.IntangoXML))
-		router.Handler(http.MethodGet, apiVersionPath+"evadav", s.ph(s.Evadav))
-		router.Handler(http.MethodGet, apiVersionPath+"datsun", s.ph(s.Datsun))
-		router.Handler(http.MethodGet, apiVersionPath+"volvo", s.ph(s.Volvo))
-		router.Handler(http.MethodGet, apiVersionPath+"mazda", s.ph(s.Mazda))
-
-		router.Handler(http.MethodPost, apiVersionPath+"openrtb", s.ph(s.OpenRTB))
-		router.Handler(http.MethodPost, apiVersionPath+"openrtb/vast", s.ph(s.OpenRTBVast))
-		router.Handler(http.MethodPost, apiVersionPath+"openrtb/native", s.ph(s.OpenRTBNative))
-		router.Handler(http.MethodPost, apiVersionPath+"openrtb/native/multibid", s.ph(s.OpenRTBNativeMultiBid))
-
-		router.Handler(http.MethodGet, apiVersionPath+"openrtb/nurl", s.ph(s.Nurl))
-		router.Handler(http.MethodGet, apiVersionPath+"openrtb/burl", s.ph(s.Burl))
-		router.Handler(http.MethodGet, apiVersionPath+"openrtb/lurl", s.ph(s.Lurl))
-
-		router.Handler(http.MethodGet, "/metrics", promhttp.Handler())
-		router.HandlerFunc(http.MethodGet, "/check", s.check)
-
-		return router
-	}()
-}
-
-func (s *Server) RequestValues(query url.Values) (float64, int, bool) {
-	var price float64
-	if len(query.Get("price")) > 0 {
-		price, _ = strconv.ParseFloat(query.Get("price"), 64)
-	}
-
-	delay := randomdata.Number(s.config.Bid.DelayMin, s.config.Bid.DelayMax)
-	if len(query.Get("delay")) > 0 {
-		delay, _ = strconv.Atoi(query.Get("delay"))
-	}
-
-	var skip bool
-	if len(query.Get("skip")) > 0 {
-		skip = true
-	}
+func (s *Server) RequestValues(args *fasthttp.Args) (float64, int, bool) {
+	price := args.GetUfloatOrZero("price")
+	delay := args.GetUintOrZero("delay")
+	skip := args.GetBool("skip")
 
 	return price, delay, skip
 }
@@ -173,7 +112,9 @@ func (s *Server) NewResponse() *HandlerResponse {
 	}
 }
 
-func (s *Server) check(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("OK"))
+func (s *Server) check(ctx *atreugo.RequestCtx) error {
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody([]byte("OK"))
+
+	return nil
 }

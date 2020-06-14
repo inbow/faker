@@ -6,6 +6,7 @@ import (
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/savsgio/atreugo/v11"
 )
 
 type (
@@ -25,24 +26,24 @@ type (
 	}
 )
 
-func (s *Server) Volvo(w http.ResponseWriter, r *http.Request) {
+func (s *Server) Volvo(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	price, delay, skip := s.RequestValues(r.URL.Query())
+	price, delay, skip := s.RequestValues(ctx.QueryArgs())
 
 	defer func() {
 		time.Sleep(time.Duration(delay) * time.Millisecond)
 
-		w.Header().Set("Content-Type", "application/javascript")
-		w.WriteHeader(response.StatusCode)
+		ctx.Response.Header.Set("Content-Type", "application/javascript")
+		ctx.SetStatusCode(response.StatusCode)
 
 		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			_, _ = w.Write(response.Body)
+			ctx.SetBody(response.Body)
 		}
 	}()
 
 	if skip {
 		response.StatusCode = http.StatusNoContent
-		return
+		return nil
 	}
 
 	handlerResponse := &VolvoResponse{
@@ -66,4 +67,6 @@ func (s *Server) Volvo(w http.ResponseWriter, r *http.Request) {
 
 	response.StatusCode = http.StatusOK
 	response.Body = data
+
+	return nil
 }

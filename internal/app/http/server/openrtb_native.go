@@ -1,78 +1,61 @@
 package server
 
 import (
-	"io/ioutil"
 	"net/http"
 	"time"
 
 	"github.com/Pallinder/go-randomdata"
-	"github.com/bsm/openrtb"
+	"github.com/bsm/openrtb/v3"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/savsgio/atreugo/v11"
 
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
 // nolint:funlen
-func (s *Server) OpenRTBNative(w http.ResponseWriter, r *http.Request) {
+func (s *Server) OpenRTBNative(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	price, delay, skip := s.RequestValues(r.URL.Query())
+	price, delay, skip := s.RequestValues(ctx.QueryArgs())
 
 	defer func() {
 		time.Sleep(time.Duration(delay) * time.Millisecond)
 
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(response.StatusCode)
+		ctx.Response.Header.Set("Content-Type", "application/json")
+		ctx.SetStatusCode(response.StatusCode)
 
 		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			_, _ = w.Write(response.Body)
+			ctx.SetBody(response.Body)
 		}
 	}()
 
 	if skip {
 		response.StatusCode = http.StatusNoContent
-		return
-	}
-
-	data, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		response.StatusCode = http.StatusBadRequest
-		response.Body = []byte(err.Error())
-
-		return
+		return nil
 	}
 
 	bidRequest := openrtb.BidRequest{}
-	if err := jsoniter.Unmarshal(data, &bidRequest); err != nil {
+	if err := jsoniter.Unmarshal(ctx.PostBody(), &bidRequest); err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
 
-		return
+		return nil
 	}
 
 	if err := bidRequest.Validate(); err != nil {
 		response.StatusCode = http.StatusBadRequest
 		response.Body = []byte(err.Error())
 
-		return
+		return nil
 	}
-
-	// nurlUrl := "http://" + s.config.HTTP.Host + ":" + strconv.Itoa(s.config.HTTP.Port) + "/nurl"
-	// if len(query.Get("nurlUrl")) > 0 {
-	// 	nurlUrl = query.Get("nurlUrl")
-	// }
-	//
-	// burlUrl := "http://" + s.config.HTTP.Host + ":" + strconv.Itoa(s.config.HTTP.Port) + "/burl"
-	// if len(query.Get("burlUrl")) > 0 {
-	// 	burlUrl = query.Get("burlUrl")
-	// }
 
 	bid := openrtb.Bid{
 		ID:       randomdata.RandStringRunes(15),
-		ImpID:    bidRequest.Imp[0].ID,
+		ImpID:    bidRequest.Impressions[0].ID,
 		AdMarkup: openRTBNativeAdm,
 
-		// NURL: nurlUrl,
-		// BURL: burlUrl,
+		BillingURL: s.generator.URL(generator.BURL),
+		NoticeURL:  s.generator.URL(generator.NURL),
+		LossURL:    s.generator.URL(generator.LURL),
 	}
 
 	if price != 0 {
@@ -82,16 +65,16 @@ func (s *Server) OpenRTBNative(w http.ResponseWriter, r *http.Request) {
 	}
 
 	seatBid := openrtb.SeatBid{
-		Bid: []openrtb.Bid{bid},
+		Bids: []openrtb.Bid{bid},
 	}
 
 	bidResponse := openrtb.BidResponse{
 		ID:       bidRequest.ID,
-		SeatBid:  []openrtb.SeatBid{seatBid},
+		SeatBids: []openrtb.SeatBid{seatBid},
 		Currency: "USD",
 	}
 
-	data, err = jsoniter.Marshal(bidResponse)
+	data, err := jsoniter.Marshal(bidResponse)
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
@@ -99,6 +82,8 @@ func (s *Server) OpenRTBNative(w http.ResponseWriter, r *http.Request) {
 
 	response.StatusCode = http.StatusOK
 	response.Body = data
+
+	return nil
 }
 
 var (
