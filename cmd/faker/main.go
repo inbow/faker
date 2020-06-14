@@ -19,8 +19,8 @@ import (
 )
 
 var (
-	version     = "unknown"
-	serviceName = "unknown"
+	version = "unknown"
+	service = "unknown"
 )
 
 func main() {
@@ -32,12 +32,12 @@ func main() {
 	flag.Parse()
 
 	ctx := grace.ShutdownContext(context.Background())
-	ctx = context.WithValue(ctx, env.Name, serviceName)
+	ctx = context.WithValue(ctx, env.Name, service)
 	ctx = context.WithValue(ctx, env.Version, version)
 	ctx = context.WithValue(ctx, env.Environment, environment)
 
 	logger, err := zapLogger.New(
-		serviceName,
+		service,
 		version,
 		environment,
 		logLevel,
@@ -58,14 +58,14 @@ func main() {
 		appPath = os.Getenv("APP_PATH")
 	}
 
-	appConfig, err := config.NewAppConfig(serviceName, appPath+"/configs/"+serviceName+"/"+environment+".yml")
+	appConfig, err := config.NewAppConfig(service, appPath+"/configs/"+service+"/"+environment+".yml")
 	if err != nil {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
 
 	gnrtr := generator.New()
 
-	application := app.New(serviceName, version, environment, appConfig, logger, gnrtr)
+	application := app.New(service, version, environment, appConfig, logger, gnrtr)
 
 	application.Run(ctx)
 	application.Shutdown()
