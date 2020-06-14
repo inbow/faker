@@ -18,19 +18,15 @@ import (
 	zapLogger "github.com/oxyd-io/faker/internal/logger"
 )
 
-const (
-	serviceName = "faker"
-)
-
 var (
-	version = "unknown"
+	version     = "unknown"
+	serviceName = "unknown"
 )
 
 func main() {
-	var environment, logLevel string
-
 	rand.Seed(time.Now().UnixNano())
 
+	var environment, logLevel string
 	flag.StringVar(&environment, "e", "", "environment")
 	flag.StringVar(&logLevel, "ll", "info", "logging level")
 	flag.Parse()

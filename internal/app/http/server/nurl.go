@@ -2,9 +2,13 @@ package server
 
 import (
 	"net/http"
+
+	"github.com/savsgio/atreugo/v11"
 )
 
-func (s *Server) Nurl(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Success nurl notify")) // nolint:errcheck
+func (s *Server) Nurl(ctx *atreugo.RequestCtx) error {
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody([]byte("Success nurl notify"))
+
+	return nil
 }
