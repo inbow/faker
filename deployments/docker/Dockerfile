@@ -1,4 +1,12 @@
-FROM golang:1.14 AS build
+FROM golang:1.14 AS dependencies
+ARG NAME
+ENV NAME ${NAME}
+WORKDIR /opt/${NAME}
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+FROM dependencies AS build
 ARG NAME
 ENV NAME ${NAME}
 WORKDIR /opt/${NAME}

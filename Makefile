@@ -6,8 +6,10 @@ COMMIT := $(shell git rev-parse --short HEAD)
 
 # Build
 GO_PACKAGE := github.com/${ORG}/${NAME}
-BUILD_CMD := CGO_ENABLED=0 go build -o bin/${NAME} -ldflags '-v -w -s -X main.version=${VERSION}' ./cmd/${NAME}
-DEBUG_CMD := CGO_ENABLED=0 go build -o bin/${NAME} -gcflags "all=-N -l" -ldflags '-X main.version=${COMMIT}' ./cmd/${NAME}
+GC_FLAGS := -gcflags 'all=-N -l'
+LD_FLAGS := -ldflags '-X main.serviceName=${NAME} -X main.version=${COMMIT}'
+BUILD_CMD := CGO_ENABLED=0 go build -o bin/${NAME} ${LD_FLAGS} ${GO_PACKAGE}/cmd/${NAME}
+DEBUG_CMD := CGO_ENABLED=0 go build -o bin/${NAME} ${GC_FLAGS} ${LD_FLAGS} ${GO_PACKAGE}/cmd/${NAME}
 
 # Docker
 REGISTRY_URL := docker.pkg.github.com
@@ -18,11 +20,6 @@ DOCKER_COMPOSE_FILE := deployments/docker-compose/docker-compose.yml
 # Other
 .DEFAULT_GOAL := build
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-
-.PHONY: vendor
-vendor:
-	go mod tidy
-	go mod vendor
 
 .PHONY: linters
 linters:
@@ -39,11 +36,11 @@ clean:
 	@-rm -rf bin/${NAME}
 
 .PHONY: build
-build: vendor clean
+build: clean
 	${BUILD_CMD}
 
 .PHONY: build_debug
-build_debug: vendor clean
+build_debug: clean
 	${DEBUG_CMD}
 
 .PHONY: docker_local_push

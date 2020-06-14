@@ -4,9 +4,9 @@ import (
 	"go.uber.org/zap"
 )
 
-func New(name, version, env, level string) (*zap.Logger, error) {
+func New(service, version, environment, level string) (*zap.Logger, error) {
 	var config zap.Config
-	if env == "local" {
+	if environment == "local" {
 		config = zap.NewDevelopmentConfig()
 	} else {
 		config = zap.NewProductionConfig()
@@ -23,9 +23,9 @@ func New(name, version, env, level string) (*zap.Logger, error) {
 	}
 
 	logger = logger.With(
-		zap.String("name", name),
-		zap.String("ver", version),
-		zap.String("env", env),
+		zap.String("service", service),
+		zap.String("version", version),
+		zap.String("environment", environment),
 	)
 
 	return logger, nil
