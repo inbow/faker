@@ -53,6 +53,8 @@ github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZm
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
 github.com/fasthttp/router v1.1.7 h1:1Wt3iK7yILMNUlgWg3kfqNW8cQhvMIgkqKUhh370wR4=
 github.com/fasthttp/router v1.1.7/go.mod h1:GllqmaKtAsIvYwz5Nbu0qcbQQXBSVaeXw2KY3SmlbYM=
+github.com/fasthttp/router v1.2.2 h1:znEzZbSKjKDzXwUHiq/HQ17brnKx9ZF6ZphYKGrfkVk=
+github.com/fasthttp/router v1.2.2/go.mod h1:7KEYuV4ieG9kNJqqxnH0pwIdO69cJCVhVqZx3CpOURw=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
@@ -195,10 +197,14 @@ github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFR
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
 github.com/savsgio/atreugo/v11 v11.3.1 h1:3w0MkPU9CXGxeaHSZpuGJbcMoi9tC/pdUvutjx2+avM=
 github.com/savsgio/atreugo/v11 v11.3.1/go.mod h1:2iL5DvkMzwzLJTSo/Ep7Ud5d5IzQFmjx7nFGJ3nWKs4=
+github.com/savsgio/atreugo/v11 v11.3.2 h1:VRHyjdZ/Dnzz0L3s5uWll98MpyfKnmasaFPGBQJHGR0=
+github.com/savsgio/atreugo/v11 v11.3.2/go.mod h1:0FhvKSy1zfQvTPktUasOmxCVeWoA5g0tB0F5XxopkaQ=
 github.com/savsgio/go-logger/v2 v2.0.1 h1:MgmsI5hnQFz0n5oX1Do/T9DldTo60guQTGwlRpzk0mk=
 github.com/savsgio/go-logger/v2 v2.0.1/go.mod h1:fog+sZsg75Or4EENyd1jrS/Ps44s39hd6lccqALz0C8=
 github.com/savsgio/gotils v0.0.0-20200608092407-b1456038b6ca h1:fHGQex3/DBt5QH/ZpMCseG2ytKjCiISEkMD4RMT51Dg=
 github.com/savsgio/gotils v0.0.0-20200608092407-b1456038b6ca/go.mod h1:TWNAOTaVzGOXq8RbEvHnhzA/A2sLZzgn0m6URjnukY8=
+github.com/savsgio/gotils v0.0.0-20200608150037-a5f6f5aef16c h1:2nF5+FZ4/qp7pZVL7fR6DEaSTzuDmNaFTyqp92/hwF8=
+github.com/savsgio/gotils v0.0.0-20200608150037-a5f6f5aef16c/go.mod h1:TWNAOTaVzGOXq8RbEvHnhzA/A2sLZzgn0m6URjnukY8=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d h1:zE9ykElWQ6/NYmHa3jpm/yHnI4xSofP+UP6SpjHcSeM=
