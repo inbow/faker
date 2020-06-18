@@ -199,12 +199,16 @@ github.com/savsgio/atreugo/v11 v11.3.1 h1:3w0MkPU9CXGxeaHSZpuGJbcMoi9tC/pdUvutjx
 github.com/savsgio/atreugo/v11 v11.3.1/go.mod h1:2iL5DvkMzwzLJTSo/Ep7Ud5d5IzQFmjx7nFGJ3nWKs4=
 github.com/savsgio/atreugo/v11 v11.3.2 h1:VRHyjdZ/Dnzz0L3s5uWll98MpyfKnmasaFPGBQJHGR0=
 github.com/savsgio/atreugo/v11 v11.3.2/go.mod h1:0FhvKSy1zfQvTPktUasOmxCVeWoA5g0tB0F5XxopkaQ=
+github.com/savsgio/atreugo/v11 v11.3.3 h1:P0BETbQqiGAAzvfGNEicHJAQOr7G3UpC7qQwpTFjzV4=
+github.com/savsgio/atreugo/v11 v11.3.3/go.mod h1:69uwxRbqaHBAcyVq+Ic2QwsyzkaJx9XGB+TEi5kMJk8=
 github.com/savsgio/go-logger/v2 v2.0.1 h1:MgmsI5hnQFz0n5oX1Do/T9DldTo60guQTGwlRpzk0mk=
 github.com/savsgio/go-logger/v2 v2.0.1/go.mod h1:fog+sZsg75Or4EENyd1jrS/Ps44s39hd6lccqALz0C8=
 github.com/savsgio/gotils v0.0.0-20200608092407-b1456038b6ca h1:fHGQex3/DBt5QH/ZpMCseG2ytKjCiISEkMD4RMT51Dg=
 github.com/savsgio/gotils v0.0.0-20200608092407-b1456038b6ca/go.mod h1:TWNAOTaVzGOXq8RbEvHnhzA/A2sLZzgn0m6URjnukY8=
 github.com/savsgio/gotils v0.0.0-20200608150037-a5f6f5aef16c h1:2nF5+FZ4/qp7pZVL7fR6DEaSTzuDmNaFTyqp92/hwF8=
 github.com/savsgio/gotils v0.0.0-20200608150037-a5f6f5aef16c/go.mod h1:TWNAOTaVzGOXq8RbEvHnhzA/A2sLZzgn0m6URjnukY8=
+github.com/savsgio/gotils v0.0.0-20200616100644-13ff1fd2c28c h1:KKqhycXW1WVNkX7r4ekTV2gFkbhdyihlWD8c0/FiWmk=
+github.com/savsgio/gotils v0.0.0-20200616100644-13ff1fd2c28c/go.mod h1:TWNAOTaVzGOXq8RbEvHnhzA/A2sLZzgn0m6URjnukY8=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg65j358z/aeFdxmN0P9QXhEzd20vsDc=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d h1:zE9ykElWQ6/NYmHa3jpm/yHnI4xSofP+UP6SpjHcSeM=
