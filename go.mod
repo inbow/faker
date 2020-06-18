@@ -12,7 +12,7 @@ require (
 	github.com/prometheus/client_golang v0.9.4
 	github.com/prometheus/procfs v0.0.3 // indirect
 	github.com/proxeter/errors-channel v0.1.0
-	github.com/savsgio/atreugo/v11 v11.3.2
+	github.com/savsgio/atreugo/v11 v11.3.3
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/valyala/fasthttp v1.14.0
