@@ -6,6 +6,7 @@ require (
 	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/bsm/openrtb/v3 v3.0.3
 	github.com/chapsuk/grace v0.5.0
+	github.com/google/uuid v1.1.1
 	github.com/json-iterator/go v1.1.10
 	github.com/onsi/ginkgo v1.11.0 // indirect
 	github.com/onsi/gomega v1.8.1 // indirect
@@ -15,6 +16,7 @@ require (
 	github.com/savsgio/atreugo/v11 v11.3.3
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
+	github.com/tada-team/kozma v1.0.2
 	github.com/valyala/fasthttp v1.14.0
 	go.uber.org/zap v1.15.0
 	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect

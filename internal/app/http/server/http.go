@@ -68,14 +68,17 @@ func (s *Server) Start(ctx context.Context) error {
 	}
 
 	server.GET("/api/v1/zeropark", s.ZeroPark)
+	server.GET("/api/v1/zeropark/push", s.ZeroparkPush)
+
+	server.GET("/api/v1/propellerads/push", s.PropellerAdsPush)
+	server.GET("/api/v1/propellerads/custom", s.PropellerAdsCustom)
+
 	server.GET("/api/v1/meetads", s.MeetAdsXML)
 	server.GET("/api/v1/intango", s.IntangoXML)
 	server.GET("/api/v1/evadav", s.Evadav)
 	server.GET("/api/v1/datsun", s.Datsun)
 	server.GET("/api/v1/volvo", s.Volvo)
 	server.GET("/api/v1/mazda", s.Mazda)
-	server.GET("/api/v1/propellerads/push", s.PropellerAdsPush)
-	server.GET("/api/v1/propellerads/custom", s.PropellerAdsCustom)
 
 	server.GET("/api/v1/openrtb", s.OpenRTB)
 	server.GET("/api/v1/openrtb/native", s.OpenRTBNative)
