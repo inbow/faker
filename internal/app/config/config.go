@@ -31,15 +31,17 @@ func NewAppConfig(serviceName, configFile string) (*AppConfig, error) {
 }
 
 func loadConfig(serviceName, configFile string) (*AppConfig, error) {
+	var appConfig AppConfig
+
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix(serviceName)
 	viper.SetConfigFile(configFile)
+
 	err := viper.ReadInConfig()
 	if err != nil {
 		return nil, err
 	}
 
-	var appConfig AppConfig
 	err = viper.Unmarshal(&appConfig)
 	if err != nil {
 		return nil, err

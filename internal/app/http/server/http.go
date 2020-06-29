@@ -80,9 +80,9 @@ func (s *Server) Start(ctx context.Context) error {
 	server.GET("/api/v1/volvo", s.Volvo)
 	server.GET("/api/v1/mazda", s.Mazda)
 
-	server.GET("/api/v1/openrtb", s.OpenRTB)
-	server.GET("/api/v1/openrtb/native", s.OpenRTBNative)
-	server.GET("/api/v1/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
+	server.POST("/api/v1/openrtb", s.OpenRTB)
+	server.POST("/api/v1/openrtb/native", s.OpenRTBNative)
+	server.POST("/api/v1/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
 	server.GET("/api/v1/openrtb/burl", s.Burl)
 	server.GET("/api/v1/openrtb/nurl", s.Nurl)
 	server.GET("/api/v1/openrtb/lurl", s.Lurl)

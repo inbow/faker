@@ -42,7 +42,7 @@ func (s *Server) PropellerAdsPush(ctx *atreugo.RequestCtx) error {
 		ctx.SetStatusCode(response.StatusCode)
 
 		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body) // nolint:errcheck
+			ctx.SetBody(response.Body)
 		}
 	}()
 
