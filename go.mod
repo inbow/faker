@@ -19,7 +19,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/stretchr/testify v1.5.1 // indirect
-	github.com/tada-team/kozma v1.0.2
+	github.com/tada-team/kozma v1.0.3
 	github.com/tidwall/pretty v1.0.1
 	github.com/valyala/fasthttp v1.14.0
 	go.uber.org/zap v1.15.0
