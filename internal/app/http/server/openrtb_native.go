@@ -8,6 +8,7 @@ import (
 	"github.com/bsm/openrtb/v3"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/savsgio/atreugo/v11"
+	"github.com/tidwall/pretty"
 
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
@@ -88,7 +89,7 @@ func (s *Server) OpenRTBNative(ctx *atreugo.RequestCtx) error {
 
 var (
 	// nolint:gochecknoglobals
-	openRTBNativeAdm = `
+	openRTBNativeAdm = string(pretty.Ugly([]byte(`
 {
    "native":{
       "ver":"1.2",
@@ -145,5 +146,5 @@ var (
       ]
    }
 }
-`
+`)))
 )
