@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/savsgio/atreugo/v11"
+	"github.com/tidwall/pretty"
 )
 
 func (s *Server) OpenRTBNativeMultiBid(ctx *atreugo.RequestCtx) error {
@@ -35,7 +36,7 @@ func (s *Server) OpenRTBNativeMultiBid(ctx *atreugo.RequestCtx) error {
 
 var (
 	// nolint:lll
-	openRTBNativeMultiBid = []byte(`
+	openRTBNativeMultiBid = pretty.Ugly([]byte(`
 {
    "id":"e1416851-e170-435b-b857-eb0c7609af81",
    "seatbid":[
@@ -85,5 +86,5 @@ var (
       }
    ]
 }
-`)
+`))
 )
