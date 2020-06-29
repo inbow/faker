@@ -24,9 +24,10 @@ var (
 )
 
 func main() {
+	var environment, logLevel string
+
 	rand.Seed(time.Now().UnixNano())
 
-	var environment, logLevel string
 	flag.StringVar(&environment, "e", "", "environment")
 	flag.StringVar(&logLevel, "ll", "info", "logging level")
 	flag.Parse()

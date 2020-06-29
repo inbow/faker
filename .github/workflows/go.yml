@@ -20,4 +20,3 @@ jobs:
       run: make build
     - name: Lint && Test
       run: make tests
-      continue-on-error: true
