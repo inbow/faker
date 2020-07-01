@@ -73,6 +73,9 @@ func (s *Server) Start(ctx context.Context) error {
 	server.GET("/api/v1/propellerads/push", s.PropellerAdsPush)
 	server.GET("/api/v1/propellerads/custom", s.PropellerAdsCustom)
 
+	server.GET("/api/v1/chevrolet", s.ChevroletPush)
+	server.POST("/api/v1/chevrolet/impression", s.ChevroletImpression)
+
 	server.GET("/api/v1/meetads", s.MeetAdsXML)
 	server.GET("/api/v1/intango", s.IntangoXML)
 	server.GET("/api/v1/evadav", s.Evadav)
