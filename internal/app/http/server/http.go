@@ -68,34 +68,38 @@ func (s *Server) Start(ctx context.Context) error {
 		return err
 	}
 
-	server.UseBefore(s.beforeMiddleware)
-	server.UseAfter(s.afterMiddleware)
+	rootPath := server.NewGroupPath("")
+	apiV1Path := rootPath.NewGroupPath("/api/v1")
 
-	server.GET("/api/v1/zeropark", s.ZeroPark)
-	server.GET("/api/v1/zeropark/push", s.ZeroparkPush)
+	apiV1Path.UseBefore(s.beforeMiddleware)
+	apiV1Path.UseAfter(s.afterMiddleware)
 
-	server.GET("/api/v1/propellerads/push", s.PropellerAdsPush)
-	server.GET("/api/v1/propellerads/custom", s.PropellerAdsCustom)
+	apiV1Path.GET("/zeropark", s.ZeroParkPopunder)
+	apiV1Path.GET("/zeropark/push", s.ZeroParkPush)
 
-	server.GET("/api/v1/chevrolet", s.ChevroletPush)
-	server.POST("/api/v1/chevrolet/impression", s.ChevroletImpression)
+	apiV1Path.GET("/propellerads/push", s.PropellerAdsPush)
+	apiV1Path.GET("/propellerads/custom", s.PropellerAdsCustom)
 
-	server.GET("/api/v1/meetads", s.MeetAdsXML)
-	server.GET("/api/v1/intango", s.IntangoXML)
-	server.GET("/api/v1/evadav", s.Evadav)
-	server.GET("/api/v1/datsun", s.Datsun)
-	server.GET("/api/v1/volvo", s.Volvo)
-	server.GET("/api/v1/mazda", s.Mazda)
+	apiV1Path.GET("/chevrolet", s.ChevroletPush)
+	apiV1Path.POST("/chevrolet/impression", s.ChevroletImpression)
 
-	server.POST("/api/v1/openrtb", s.OpenRTB)
-	server.POST("/api/v1/openrtb/native", s.OpenRTBNative)
-	server.POST("/api/v1/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
-	server.GET("/api/v1/openrtb/burl", s.BiddingURL)
-	server.GET("/api/v1/openrtb/nurl", s.NotificationURL)
-	server.GET("/api/v1/openrtb/lurl", s.LossURL)
+	apiV1Path.GET("/meetads", s.MeetAdsXML)
+	apiV1Path.GET("/intango", s.IntangoXML)
+	apiV1Path.GET("/evadav", s.Evadav)
+	apiV1Path.GET("/datsun", s.Datsun)
+	apiV1Path.GET("/volvo", s.Volvo)
+	apiV1Path.GET("/mazda", s.Mazda)
 
-	server.GET("/check", s.check)
-	server.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
+	apiV1Path.POST("/openrtb", s.OpenRTB)
+	apiV1Path.GET("/openrtb/burl", s.OpenRTBBiddingURL)
+	apiV1Path.GET("/openrtb/nurl", s.OpenRTBNotificationURL)
+	apiV1Path.GET("/openrtb/lurl", s.OpenRTBLossURL)
+
+	apiV1Path.POST("/openrtb/native", s.OpenRTBNative)
+	apiV1Path.POST("/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
+
+	rootPath.GET("/check", s.check)
+	rootPath.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
 
 	s.logger.Info("Server running", zap.Int("port", s.config.HTTP.Port))
 	select {

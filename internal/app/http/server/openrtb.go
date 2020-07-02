@@ -83,23 +83,23 @@ func (s *Server) OpenRTB(ctx *atreugo.RequestCtx) error {
 	return nil
 }
 
-func (s *Server) NotificationURL(ctx *atreugo.RequestCtx) error {
+func (s *Server) OpenRTBNotificationURL(ctx *atreugo.RequestCtx) error {
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("Success nurl notify"))
+	ctx.SetBody([]byte("Success notification url notify"))
 
 	return nil
 }
 
-func (s *Server) BiddingURL(ctx *atreugo.RequestCtx) error {
+func (s *Server) OpenRTBBiddingURL(ctx *atreugo.RequestCtx) error {
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("Success burl notify"))
+	ctx.SetBody([]byte("Success bidding url notify"))
 
 	return nil
 }
 
-func (s *Server) LossURL(ctx *atreugo.RequestCtx) error {
+func (s *Server) OpenRTBLossURL(ctx *atreugo.RequestCtx) error {
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("Success lurl notify"))
+	ctx.SetBody([]byte("Success loss url notify"))
 
 	return nil
 }
