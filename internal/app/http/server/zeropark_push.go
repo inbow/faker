@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/savsgio/atreugo/v11"
@@ -28,11 +27,9 @@ type (
 
 func (s *Server) ZeroparkPush(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	_, delay, skip := s.RequestValues(ctx.QueryArgs())
+	_ = s.price(ctx.QueryArgs())
 
 	defer func() {
-		time.Sleep(time.Duration(delay) * time.Millisecond)
-
 		ctx.Response.Header.Set("Content-Type", "application/json")
 		ctx.SetStatusCode(response.StatusCode)
 
@@ -40,11 +37,6 @@ func (s *Server) ZeroparkPush(ctx *atreugo.RequestCtx) error {
 			ctx.SetBody(response.Body)
 		}
 	}()
-
-	if skip {
-		response.StatusCode = http.StatusNoContent
-		return nil
-	}
 
 	zrppr := ZeroparkPushResponse{
 		Title: kozma.Say(),
@@ -65,6 +57,8 @@ func (s *Server) ZeroparkPush(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
+
+		return nil
 	}
 
 	response.StatusCode = http.StatusOK

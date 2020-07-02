@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/xml"
 	"net/http"
-	"time"
 
 	"github.com/savsgio/atreugo/v11"
 )
@@ -20,11 +19,9 @@ type (
 
 func (s *Server) ZeroPark(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	price, delay, skip := s.RequestValues(ctx.QueryArgs())
+	price := s.price(ctx.QueryArgs())
 
 	defer func() {
-		time.Sleep(time.Duration(delay) * time.Millisecond)
-
 		ctx.Response.Header.Set("Content-Type", "application/xml")
 		ctx.SetStatusCode(response.StatusCode)
 
@@ -32,11 +29,6 @@ func (s *Server) ZeroPark(ctx *atreugo.RequestCtx) error {
 			ctx.SetBody(response.Body)
 		}
 	}()
-
-	if skip {
-		response.StatusCode = http.StatusNoContent
-		return nil
-	}
 
 	par := ZeroParkResponse{
 		XMLName:    xml.Name{Local: "result"},
@@ -50,6 +42,8 @@ func (s *Server) ZeroPark(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
+
+		return nil
 	}
 
 	response.StatusCode = http.StatusOK

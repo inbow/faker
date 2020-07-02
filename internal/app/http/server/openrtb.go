@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/bsm/openrtb/v3"
@@ -15,11 +14,9 @@ import (
 // nolint:funlen
 func (s *Server) OpenRTB(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	price, delay, skip := s.RequestValues(ctx.QueryArgs())
+	price := s.price(ctx.QueryArgs())
 
 	defer func() {
-		time.Sleep(time.Duration(delay) * time.Millisecond)
-
 		ctx.Response.Header.Set("Content-Type", "application/json")
 		ctx.SetStatusCode(response.StatusCode)
 
@@ -27,11 +24,6 @@ func (s *Server) OpenRTB(ctx *atreugo.RequestCtx) error {
 			ctx.SetBody(response.Body)
 		}
 	}()
-
-	if skip {
-		response.StatusCode = http.StatusNoContent
-		return nil
-	}
 
 	bidRequest := openrtb.BidRequest{}
 	if err := jsoniter.Unmarshal(ctx.PostBody(), &bidRequest); err != nil {
@@ -81,6 +73,8 @@ func (s *Server) OpenRTB(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
+
+		return nil
 	}
 
 	response.StatusCode = http.StatusOK
