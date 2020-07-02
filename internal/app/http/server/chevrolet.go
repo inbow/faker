@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/savsgio/atreugo/v11"
@@ -37,11 +36,9 @@ type (
 
 func (s *Server) ChevroletPush(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	_, delay, skip := s.RequestValues(ctx.QueryArgs())
+	_ = s.price(ctx.QueryArgs())
 
 	defer func() {
-		time.Sleep(time.Duration(delay) * time.Millisecond)
-
 		ctx.Response.Header.Set("Content-Type", "application/json")
 		ctx.SetStatusCode(response.StatusCode)
 
@@ -49,11 +46,6 @@ func (s *Server) ChevroletPush(ctx *atreugo.RequestCtx) error {
 			ctx.SetBody(response.Body)
 		}
 	}()
-
-	if skip {
-		response.StatusCode = http.StatusNoContent
-		return nil
-	}
 
 	chevroletResponseItem := ResponseItem{
 		Slot:     1,
@@ -63,18 +55,20 @@ func (s *Server) ChevroletPush(ctx *atreugo.RequestCtx) error {
 		CPC:      s.generator.Price(generator.CPC),
 	}
 
-	chevroletResounse := &ChevroletPushResponse{
+	chevroletResponse := &ChevroletPushResponse{
 		ImpressionKey: uuid.New().String(),
 		ImpressionURL: fmt.Sprintf("https://%v:%v/api/v1/chevrolet/impression", s.config.HTTP.Host, s.config.HTTP.Port),
 		SlotCount:     1,
 	}
 
-	chevroletResounse.ResponseItem = append(chevroletResounse.ResponseItem, chevroletResponseItem)
+	chevroletResponse.ResponseItem = append(chevroletResponse.ResponseItem, chevroletResponseItem)
 
-	data, err := json.Marshal(chevroletResounse)
+	data, err := json.Marshal(chevroletResponse)
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
+
+		return nil
 	}
 
 	response.StatusCode = http.StatusOK
