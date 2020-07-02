@@ -73,7 +73,7 @@ func (s *Server) ZeroParkPopunder(ctx *atreugo.RequestCtx) error {
 
 func (s *Server) ZeroParkPush(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	_ = s.price(ctx.QueryArgs())
+	price := s.price(ctx.QueryArgs())
 
 	defer func() {
 		ctx.Response.Header.Set("Content-Type", "application/json")
@@ -92,7 +92,7 @@ func (s *Server) ZeroParkPush(ctx *atreugo.RequestCtx) error {
 		ImageURL:      "https://push.example.com/imp/dc3e7a05-e267-4a7a-88be-cec6e79f5d3d/1/{token}",
 		ImpressionURL: "https://push.example.com/imp/dc3e7a05-e267-4a7a-88be-cec6e79f5d3d/1/{token}",
 
-		CPC: s.generator.Price(generator.CPC),
+		CPC: s.generator.PriceOrDefault(price, generator.CPC),
 
 		AdID: uuid.New().String(),
 

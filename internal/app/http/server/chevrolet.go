@@ -36,7 +36,7 @@ type (
 
 func (s *Server) ChevroletPush(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	_ = s.price(ctx.QueryArgs())
+	price := s.price(ctx.QueryArgs())
 
 	defer func() {
 		ctx.Response.Header.Set("Content-Type", "application/json")
@@ -52,7 +52,7 @@ func (s *Server) ChevroletPush(ctx *atreugo.RequestCtx) error {
 		ClickURL: "https://push.example.com/c/dc3e7a05-e267-4a7a-88be-cec6e79f5d3d",
 		Title:    kozma.Say(),
 		ImageURL: "https://push.example.com/imp/dc3e7a05-e267-4a7a-88be-cec6e79f5d3d",
-		CPC:      s.generator.Price(generator.CPC),
+		CPC:      s.generator.PriceOrDefault(price, generator.CPC),
 	}
 
 	chevroletResponse := &ChevroletPushResponse{
