@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-	"time"
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/savsgio/atreugo/v11"
@@ -33,11 +32,9 @@ type (
 
 func (s *Server) PropellerAdsPush(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	price, delay, skip := s.RequestValues(ctx.QueryArgs())
+	price := s.price(ctx.QueryArgs())
 
 	defer func() {
-		time.Sleep(time.Duration(delay) * time.Millisecond)
-
 		ctx.Response.Header.Set("Content-Type", "application/json")
 		ctx.SetStatusCode(response.StatusCode)
 
@@ -45,11 +42,6 @@ func (s *Server) PropellerAdsPush(ctx *atreugo.RequestCtx) error {
 			ctx.SetBody(response.Body)
 		}
 	}()
-
-	if skip {
-		response.StatusCode = http.StatusNoContent
-		return nil
-	}
 
 	par := PropellerAdsPushResponse{
 		Ads: Ads{
@@ -71,6 +63,8 @@ func (s *Server) PropellerAdsPush(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = []byte(err.Error())
+
+		return nil
 	}
 
 	response.StatusCode = http.StatusOK

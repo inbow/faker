@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	errch "github.com/proxeter/errors-channel"
@@ -67,6 +68,9 @@ func (s *Server) Start(ctx context.Context) error {
 		return err
 	}
 
+	server.UseBefore(s.beforeMiddleware)
+	server.UseAfter(s.afterMiddleware)
+
 	server.GET("/api/v1/zeropark", s.ZeroPark)
 	server.GET("/api/v1/zeropark/push", s.ZeroparkPush)
 
@@ -104,18 +108,33 @@ func (s *Server) Start(ctx context.Context) error {
 	}
 }
 
-func (s *Server) RequestValues(args *fasthttp.Args) (float64, int, bool) {
-	price := args.GetUfloatOrZero("price")
-	delay := args.GetUintOrZero("delay")
-	skip := args.GetBool("skip")
-
-	return price, delay, skip
+func (s *Server) price(args *fasthttp.Args) float64 {
+	return args.GetUfloatOrZero("price")
 }
 
 func (s *Server) NewResponse() *HandlerResponse {
 	return &HandlerResponse{
 		StatusCode: http.StatusNoContent,
 	}
+}
+
+func (s *Server) beforeMiddleware(ctx *atreugo.RequestCtx) error {
+	skip := ctx.QueryArgs().GetBool("skip")
+
+	if skip {
+		ctx.SetStatusCode(http.StatusNoContent)
+		return nil
+	}
+
+	return ctx.Next()
+}
+
+func (s *Server) afterMiddleware(ctx *atreugo.RequestCtx) error {
+	delay := ctx.QueryArgs().GetUintOrZero("delay")
+
+	time.Sleep(time.Duration(delay) * time.Millisecond)
+
+	return ctx.Next()
 }
 
 func (s *Server) check(ctx *atreugo.RequestCtx) error {
