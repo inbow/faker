@@ -26,7 +26,7 @@ type (
 
 func (s *Server) Datsun(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
-	_ = s.price(ctx.QueryArgs())
+	price := s.price(ctx.QueryArgs())
 
 	defer func() {
 		ctx.Response.Header.Set("Content-Type", "application/json")
@@ -45,7 +45,7 @@ func (s *Server) Datsun(ctx *atreugo.RequestCtx) error {
 				Image: "https://api.taptun.com/source/img/c0qxv-5c812253bfc356-00owpx3-4ae",
 				Link:  "https://api.taptun.com/v1/click/t?s=c0qxv-5c812253bfc356-00owpx3-4ae",
 				NURL:  "http://api.taptun.com/v1/feed/nurl?s=c0qxv-5c812253bfc356-00owpx3-4ae",
-				CPC:   s.generator.Price(generator.CPC),
+				CPC:   s.generator.PriceOrDefault(price, generator.CPC),
 			},
 			{
 				ID:    "19",
@@ -53,7 +53,7 @@ func (s *Server) Datsun(ctx *atreugo.RequestCtx) error {
 				Image: "https://api.taptun.com/source/img/c0qxv-5c812253c03b52-00w2ndf-40u",
 				Link:  "https://api.taptun.com/v1/click/t?s=c0qxv-5c812253c03b52-00w2ndf-40u",
 				NURL:  "http://api.taptun.com/v1/feed/nurl?s=c0qxv-5c812253c03b52-00w2ndf-40u",
-				CPC:   s.generator.Price(generator.CPC),
+				CPC:   s.generator.PriceOrDefault(price, generator.CPC),
 			},
 		},
 	}

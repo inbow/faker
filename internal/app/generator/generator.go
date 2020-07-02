@@ -15,8 +15,12 @@ func New() IGenerator {
 	return &Generator{}
 }
 
-func (g *Generator) Price(priceModel PriceModel) float64 {
-	price := rd.Decimal(5, 9)
+func (g *Generator) PriceOrDefault(price float64, priceModel PriceModel) float64 {
+	if price != 0 {
+		return price
+	}
+
+	price = rd.Decimal(5, 9)
 	price /= 10 // Can't generate from 0.5 to 0.9 with this library :(
 
 	if priceModel == CPC {

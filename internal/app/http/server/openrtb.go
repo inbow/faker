@@ -53,11 +53,7 @@ func (s *Server) OpenRTB(ctx *atreugo.RequestCtx) error {
 		LossURL:    s.generator.URL(generator.LURL),
 	}
 
-	if price != 0 {
-		bid.Price = price
-	} else {
-		bid.Price = s.generator.Price(generator.CPM)
-	}
+	bid.Price = s.generator.PriceOrDefault(price, generator.CPM)
 
 	seatBid := openrtb.SeatBid{
 		Bids: []openrtb.Bid{bid},
