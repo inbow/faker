@@ -86,9 +86,9 @@ func (s *Server) Start(ctx context.Context) error {
 	server.POST("/api/v1/openrtb", s.OpenRTB)
 	server.POST("/api/v1/openrtb/native", s.OpenRTBNative)
 	server.POST("/api/v1/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
-	server.GET("/api/v1/openrtb/burl", s.Burl)
-	server.GET("/api/v1/openrtb/nurl", s.Nurl)
-	server.GET("/api/v1/openrtb/lurl", s.Lurl)
+	server.GET("/api/v1/openrtb/burl", s.BiddingURL)
+	server.GET("/api/v1/openrtb/nurl", s.NotificationURL)
+	server.GET("/api/v1/openrtb/lurl", s.LossURL)
 
 	server.GET("/check", s.check)
 	server.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
