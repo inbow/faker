@@ -207,6 +207,8 @@ github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFR
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
 github.com/savsgio/atreugo/v11 v11.3.3 h1:P0BETbQqiGAAzvfGNEicHJAQOr7G3UpC7qQwpTFjzV4=
 github.com/savsgio/atreugo/v11 v11.3.3/go.mod h1:69uwxRbqaHBAcyVq+Ic2QwsyzkaJx9XGB+TEi5kMJk8=
+github.com/savsgio/atreugo/v11 v11.3.4 h1:QwfY7i/mAVVPRmrmnD1zVKzb4YGkh6JVm/km2nVL+Fw=
+github.com/savsgio/atreugo/v11 v11.3.4/go.mod h1:69uwxRbqaHBAcyVq+Ic2QwsyzkaJx9XGB+TEi5kMJk8=
 github.com/savsgio/go-logger/v2 v2.0.1 h1:MgmsI5hnQFz0n5oX1Do/T9DldTo60guQTGwlRpzk0mk=
 github.com/savsgio/go-logger/v2 v2.0.1/go.mod h1:fog+sZsg75Or4EENyd1jrS/Ps44s39hd6lccqALz0C8=
 github.com/savsgio/gotils v0.0.0-20200608150037-a5f6f5aef16c h1:2nF5+FZ4/qp7pZVL7fR6DEaSTzuDmNaFTyqp92/hwF8=
