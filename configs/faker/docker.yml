@@ -1,7 +1,0 @@
-http:
-  host: faker
-  port: 49385
-
-bid:
-  delay_min: 10
-  delay_max: 200
