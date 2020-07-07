@@ -27,8 +27,9 @@ linters:
 	golangci-lint run --enable-all --disable gomnd --disable dupl --disable gochecknoglobals --disable gofumpt
 
 .PHONY: tests
-tests: linters
+tests:
 	@go test -v ./...
+	@go test -v -race ./...
 
 .PHONY: clean
 clean:
