@@ -64,7 +64,10 @@ func main() {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
 
-	gnrtr := generator.New()
+	hostname, _ := os.Hostname()
+	appConfig.HTTP.Host = hostname
+
+	gnrtr := generator.New(appConfig)
 
 	application := app.New(service, version, environment, appConfig, logger, gnrtr)
 

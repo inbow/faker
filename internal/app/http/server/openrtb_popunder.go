@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/Pallinder/go-randomdata"
@@ -12,9 +13,10 @@ import (
 )
 
 // nolint:funlen
-func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
+func (s *Server) OpenRTBPopunder(ctx *atreugo.RequestCtx) error {
 	response := s.NewResponse()
 	price := s.price(ctx.QueryArgs())
+	url := string(ctx.QueryArgs().Peek("url"))
 
 	defer func() {
 		ctx.Response.Header.Set("Content-Type", "application/json")
@@ -40,24 +42,23 @@ func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
 		return nil
 	}
 
-	if bidRequest.Impressions[0].Banner == nil {
-		response.StatusCode = http.StatusBadRequest
-		response.Body = []byte("banner object not found")
-
-		return nil
+	ext := struct {
+		URL string `json:"url"`
+	}{
+		URL: s.generator.URLOrDefault(url),
 	}
 
-	bid := openrtb.Bid{
-		ID:       randomdata.RandStringRunes(15),
-		ImpID:    bidRequest.Impressions[0].ID,
-		AdMarkup: "<html><head></head><body>Hello World</body></html>",
+	extBody, _ := json.Marshal(ext)
 
-		Width:  bidRequest.Impressions[0].Banner.Width,
-		Height: bidRequest.Impressions[0].Banner.Height,
+	bid := openrtb.Bid{
+		ID:    randomdata.RandStringRunes(15),
+		ImpID: bidRequest.Impressions[0].ID,
 
 		LossURL:    s.generator.OpenRTBURL(generator.LossURL),
 		NoticeURL:  s.generator.OpenRTBURL(generator.NoticeURL),
 		BillingURL: s.generator.OpenRTBURL(generator.BiddingURL),
+
+		Ext: extBody,
 	}
 
 	bid.Price = s.generator.PriceOrDefault(price, generator.CPM)
@@ -82,27 +83,6 @@ func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
 
 	response.StatusCode = http.StatusOK
 	response.Body = data
-
-	return nil
-}
-
-func (s *Server) OpenRTBNotificationURL(ctx *atreugo.RequestCtx) error {
-	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("Success notification url notify"))
-
-	return nil
-}
-
-func (s *Server) OpenRTBBiddingURL(ctx *atreugo.RequestCtx) error {
-	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("Success bidding url notify"))
-
-	return nil
-}
-
-func (s *Server) OpenRTBLossURL(ctx *atreugo.RequestCtx) error {
-	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("Success loss url notify"))
 
 	return nil
 }

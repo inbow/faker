@@ -1,7 +1,9 @@
 package generator
 
 type PriceModel string
-type URLType string
+type AdMarkupType string
+
+type OpenRTBHandler string
 
 const (
 	Mile = 1000
@@ -13,7 +15,12 @@ const (
 )
 
 const (
-	LossURL         URLType = "openrtb/lurl"
-	BiddingURL      URLType = "openrtb/burl"
-	NotificationURL URLType = "openrtb/nurl"
+	LossURL    OpenRTBHandler = "lurl"
+	BiddingURL OpenRTBHandler = "burl"
+	NoticeURL  OpenRTBHandler = "nurl"
+)
+
+const (
+	Banner AdMarkupType = "Banner"
+	URL    AdMarkupType = "URL"
 )
