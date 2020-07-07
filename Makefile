@@ -28,7 +28,9 @@ linters:
 
 .PHONY: tests
 tests:
+	@echo "Without race"
 	@go test -v ./...
+	@echo "With race"
 	@go test -v -race ./...
 
 .PHONY: clean
