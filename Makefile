@@ -7,7 +7,7 @@ COMMIT := $(shell git rev-parse --short HEAD)
 # Build
 GO_PACKAGE := github.com/${ORG}/${NAME}
 GC_FLAGS := -gcflags 'all=-N -l'
-LD_FLAGS := -ldflags '-X main.service=${NAME} -X main.version=${COMMIT}'
+LD_FLAGS := -ldflags '-s -v -w -X main.service=${NAME} -X main.version=${COMMIT}'
 BUILD_CMD := CGO_ENABLED=0 go build -o bin/${NAME} ${LD_FLAGS} ${GO_PACKAGE}/cmd/${NAME}
 DEBUG_CMD := CGO_ENABLED=0 go build -o bin/${NAME} ${GC_FLAGS} ${LD_FLAGS} ${GO_PACKAGE}/cmd/${NAME}
 
