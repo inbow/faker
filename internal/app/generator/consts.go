@@ -1,7 +1,9 @@
 package generator
 
 type PriceModel string
-type URLType string
+type AdMarkupType string
+
+type OpenRTBHandler string
 
 const (
 	CPM PriceModel = "CPM"
@@ -9,7 +11,12 @@ const (
 )
 
 const (
-	BURL = "openrtb/burl"
-	NURL = "openrtb/nurl"
-	LURL = "openrtb/lurl"
+	BURL OpenRTBHandler = "burl"
+	NURL OpenRTBHandler = "nurl"
+	LURL OpenRTBHandler = "lurl"
+)
+
+const (
+	Banner AdMarkupType = "Banner"
+	URL    AdMarkupType = "URL"
 )

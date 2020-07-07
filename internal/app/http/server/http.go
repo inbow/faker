@@ -90,13 +90,13 @@ func (s *Server) Start(ctx context.Context) error {
 	apiV1Path.GET("/volvo", s.Volvo)
 	apiV1Path.GET("/mazda", s.Mazda)
 
-	apiV1Path.POST("/openrtb", s.OpenRTB)
+	apiV1Path.POST("/openrtb/banner", s.OpenRTBBanner)
+	apiV1Path.POST("/openrtb/popunder", s.OpenRTBPopunder)
+	apiV1Path.POST("/openrtb/native", s.OpenRTBNative)
+	apiV1Path.POST("/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
 	apiV1Path.GET("/openrtb/burl", s.OpenRTBBiddingURL)
 	apiV1Path.GET("/openrtb/nurl", s.OpenRTBNotificationURL)
 	apiV1Path.GET("/openrtb/lurl", s.OpenRTBLossURL)
-
-	apiV1Path.POST("/openrtb/native", s.OpenRTBNative)
-	apiV1Path.POST("/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
 
 	rootPath.GET("/check", s.check)
 	rootPath.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
