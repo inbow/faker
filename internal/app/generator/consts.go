@@ -6,14 +6,18 @@ type AdMarkupType string
 type OpenRTBHandler string
 
 const (
+	Mile = 1000
+)
+
+const (
 	CPM PriceModel = "CPM"
 	CPC PriceModel = "CPC"
 )
 
 const (
-	BURL OpenRTBHandler = "burl"
-	NURL OpenRTBHandler = "nurl"
-	LURL OpenRTBHandler = "lurl"
+	LossURL    OpenRTBHandler = "lurl"
+	BiddingURL OpenRTBHandler = "burl"
+	NoticeURL  OpenRTBHandler = "nurl"
 )
 
 const (

@@ -54,9 +54,9 @@ func (s *Server) OpenRTBPopunder(ctx *atreugo.RequestCtx) error {
 		ID:    randomdata.RandStringRunes(15),
 		ImpID: bidRequest.Impressions[0].ID,
 
-		BillingURL: s.generator.OpenRTBURL(generator.BURL),
-		NoticeURL:  s.generator.OpenRTBURL(generator.NURL),
-		LossURL:    s.generator.OpenRTBURL(generator.LURL),
+		LossURL:    s.generator.OpenRTBURL(generator.LossURL),
+		NoticeURL:  s.generator.OpenRTBURL(generator.NoticeURL),
+		BillingURL: s.generator.OpenRTBURL(generator.BiddingURL),
 
 		Ext: extBody,
 	}

@@ -4,19 +4,31 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  USER: ${{ secrets.DOCKER_USER }}
+  TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
 jobs:
   build:
+    strategy:
+      matrix:
+        go-version: [1.14.x]
+        platform: [ubuntu-latest, macos-latest]
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.platform }}
     steps:
-    - name: Set up Go 1.14
+    - name: Install Go ${{ matrix.go-version }}
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.14
+        go-version: ^${{ matrix.go-version }}
       id: go
+    - name: Configure git for private modules
+      run: git config --global url."https://${USER}:${TOKEN}@github.com".insteadOf "https://github.com"
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
     - name: Build
       run: make build
-    - name: Lint && Test
+    - name: Tests
       run: make tests
+    - name: Linters
+      run: make linters

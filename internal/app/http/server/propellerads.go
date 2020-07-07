@@ -8,7 +8,7 @@ import (
 )
 
 type (
-	PropellerAdsCustomResponse struct {
+	PropellerAdsPopunderResponse struct {
 		Bid float64 `json:"bid"`
 		URL string  `json:"url"`
 	}
@@ -50,7 +50,7 @@ func (s *Server) PropellerAdsCustom(ctx *atreugo.RequestCtx) error {
 		}
 	}()
 
-	par := PropellerAdsCustomResponse{
+	par := PropellerAdsPopunderResponse{
 		Bid: price,
 		URL: "http://digitaldsp.com/api/win_request?p=Z",
 	}

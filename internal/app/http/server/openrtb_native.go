@@ -46,9 +46,9 @@ func (s *Server) OpenRTBNative(ctx *atreugo.RequestCtx) error {
 		ImpID:    bidRequest.Impressions[0].ID,
 		AdMarkup: openRTBNativeAdm,
 
-		BillingURL: s.generator.OpenRTBURL(generator.BURL),
-		NoticeURL:  s.generator.OpenRTBURL(generator.NURL),
-		LossURL:    s.generator.OpenRTBURL(generator.LURL),
+		LossURL:    s.generator.OpenRTBURL(generator.LossURL),
+		NoticeURL:  s.generator.OpenRTBURL(generator.NoticeURL),
+		BillingURL: s.generator.OpenRTBURL(generator.BiddingURL),
 	}
 
 	bid.Price = s.generator.PriceOrDefault(price, generator.CPM)

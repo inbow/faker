@@ -27,8 +27,11 @@ linters:
 	golangci-lint run --enable-all --disable gomnd --disable dupl --disable gochecknoglobals --disable gofumpt
 
 .PHONY: tests
-tests: linters
+tests:
+	@echo "Without race"
 	@go test -v ./...
+	@echo "With race"
+	@go test -v -race ./...
 
 .PHONY: clean
 clean:
