@@ -24,7 +24,7 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 .PHONY: linters
 linters:
 	go get github.com/golangci/golangci-lint/cmd/golangci-lint
-	golangci-lint run --enable-all --disable gomnd --disable dupl --disable gochecknoglobals
+	golangci-lint run --enable-all --disable gomnd --disable dupl --disable gochecknoglobals --disable gofumpt
 
 .PHONY: tests
 tests: linters
