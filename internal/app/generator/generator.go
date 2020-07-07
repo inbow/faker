@@ -20,11 +20,10 @@ func (g *Generator) PriceOrDefault(price float64, priceModel PriceModel) float64
 		return price
 	}
 
-	price = rd.Decimal(5, 9)
-	price /= 10 // Can't generate from 0.5 to 0.9 with this library :(
+	price = rd.Decimal(5, 9) / 10 // Can't generate from 0.5 to 0.9 with this library :(
 
 	if priceModel == CPC {
-		price /= 1000
+		price /= Mile
 	}
 
 	return price
@@ -49,8 +48,4 @@ func (g *Generator) URL(urlType URLType) string {
 	resultedURL.RawQuery = unescapedQuery
 
 	return resultedURL.String()
-}
-
-func (g *Generator) AdMarkup() string {
-	return `<html><head></head><body>Hello World</body></html>`
 }

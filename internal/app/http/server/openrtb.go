@@ -43,14 +43,14 @@ func (s *Server) OpenRTB(ctx *atreugo.RequestCtx) error {
 	bid := openrtb.Bid{
 		ID:       randomdata.RandStringRunes(15),
 		ImpID:    bidRequest.Impressions[0].ID,
-		AdMarkup: s.generator.AdMarkup(),
+		AdMarkup: "<html><head></head><body>Hello World</body></html>",
 
 		Width:  bidRequest.Impressions[0].Banner.Width,
 		Height: bidRequest.Impressions[0].Banner.Height,
 
-		BillingURL: s.generator.URL(generator.BURL),
-		NoticeURL:  s.generator.URL(generator.NURL),
-		LossURL:    s.generator.URL(generator.LURL),
+		BillingURL: s.generator.URL(generator.BiddingURL),
+		NoticeURL:  s.generator.URL(generator.NotificationURL),
+		LossURL:    s.generator.URL(generator.LossURL),
 	}
 
 	bid.Price = s.generator.PriceOrDefault(price, generator.CPM)
