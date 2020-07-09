@@ -16,24 +16,15 @@ type (
 		Version     string
 		Environment string
 
-		config *config.AppConfig
 		logger *zap.Logger
+		config *config.AppConfig
 
 		generator generator.IGenerator
 	}
 )
 
-func New(
-	name, version, environment string,
-	config *config.AppConfig,
-	logger *zap.Logger,
-	generator generator.IGenerator,
-) *Application {
+func New(config *config.AppConfig, logger *zap.Logger, generator generator.IGenerator) *Application {
 	return &Application{
-		Name:        name,
-		Version:     version,
-		Environment: environment,
-
 		config: config,
 		logger: logger,
 

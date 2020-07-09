@@ -13,43 +13,33 @@ import (
 
 // nolint:funlen
 func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/json")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
 	bidRequest := openrtb.BidRequest{}
 	if err := jsoniter.Unmarshal(ctx.PostBody(), &bidRequest); err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
 	if err := bidRequest.Validate(); err != nil {
-		response.StatusCode = http.StatusBadRequest
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
 	if bidRequest.Impressions[0].Banner == nil {
-		response.StatusCode = http.StatusBadRequest
-		response.Body = []byte("banner object not found")
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte("banner object not found"))
 
 		return nil
 	}
 
 	bid := openrtb.Bid{
-		ID:       randomdata.RandStringRunes(15),
-		ImpID:    bidRequest.Impressions[0].ID,
+		ID:    randomdata.RandStringRunes(15),
+		ImpID: bidRequest.Impressions[0].ID,
+
+		Price:    s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPM),
 		AdMarkup: "<html><head></head><body>Hello World</body></html>",
 
 		Width:  bidRequest.Impressions[0].Banner.Width,
@@ -59,8 +49,6 @@ func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
 		NoticeURL:  s.generator.OpenRTBURL(generator.NoticeURL),
 		BillingURL: s.generator.OpenRTBURL(generator.BiddingURL),
 	}
-
-	bid.Price = s.generator.PriceOrDefault(price, generator.CPM)
 
 	seatBid := openrtb.SeatBid{
 		Bids: []openrtb.Bid{bid},
@@ -74,19 +62,20 @@ func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
 
 	data, err := jsoniter.Marshal(bidResponse)
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }
 
-func (s *Server) OpenRTBNotificationURL(ctx *atreugo.RequestCtx) error {
+func (s *Server) OpenRTBNoticeURL(ctx *atreugo.RequestCtx) error {
 	ctx.SetStatusCode(http.StatusOK)
 	ctx.SetBody([]byte("Success notification url notify"))
 
