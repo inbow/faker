@@ -11,7 +11,6 @@ import (
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
-// nolint:funlen
 func (s *Server) OpenRTBBanner(ctx *atreugo.RequestCtx) error {
 	bidRequest := openrtb.BidRequest{}
 	if err := jsoniter.Unmarshal(ctx.PostBody(), &bidRequest); err != nil {
