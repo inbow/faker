@@ -29,7 +29,7 @@ func (g *Generator) PriceOrDefault(price float64, priceModel PriceModel) float64
 
 	price = rd.Decimal(5, 9) / 10 // Can't generate from 0.5 to 0.9 with this library :(
 
-	if priceModel == CPC {
+	if priceModel == CPC || priceModel == CPV {
 		price /= Mile
 	}
 

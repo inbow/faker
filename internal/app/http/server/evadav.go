@@ -4,44 +4,29 @@ import (
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/oxyd-io/atom"
 	"github.com/savsgio/atreugo/v11"
+
+	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
-type (
-	evadavResponse struct {
-		Link  string  `json:"link"`
-		Price float64 `json:"cpc"`
-	}
-)
-
-func (s *Server) Evadav(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/javascript")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
-	handlerResponse := &evadavResponse{
-		Link:  "http://demo.url.link/&demo=1",
-		Price: price,
+func (s *Server) EvadavPopunder(ctx *atreugo.RequestCtx) error {
+	handlerResponse := &atom.EvadavPopunderResponse{
+		Link: s.generator.URLOrDefault(ctx.UserValue(string(URL)).(string)),
+		Cpc:  s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPV),
 	}
 
 	data, err := jsoniter.Marshal(handlerResponse)
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/javascript")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }

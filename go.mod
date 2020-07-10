@@ -13,7 +13,7 @@ require (
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
-	github.com/oxyd-io/atom v0.0.2
+	github.com/oxyd-io/atom v0.2.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v0.9.4
 	github.com/prometheus/procfs v0.0.3 // indirect

@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/savsgio/atreugo/v11"
+
+	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
 type (
@@ -24,18 +26,6 @@ type (
 )
 
 func (s *Server) IntangoXML(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/xml")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
 	iar := &IntangoResponse{}
 	iar.Result = append(iar.Result, IntangoResult{
 		Title:       "PopAd Title",
@@ -43,19 +33,20 @@ func (s *Server) IntangoXML(ctx *atreugo.RequestCtx) error {
 		DisplayURL:  "PopAds.com",
 		URL:         "http://mybestdc.com/aS/feedclick",
 		DID:         "2fa9106c-2a26-4d1e-9ffe-fcea038b402a",
-		Bid:         price,
+		Bid:         s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPV),
 	})
 
 	data, err := xml.MarshalIndent(iar, "", "")
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/xml")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }

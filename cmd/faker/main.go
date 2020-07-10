@@ -35,6 +35,7 @@ func main() {
 	ctx := grace.ShutdownContext(context.Background())
 	ctx = context.WithValue(ctx, env.Name, service)
 	ctx = context.WithValue(ctx, env.Version, version)
+	ctx = context.WithValue(ctx, env.LogLevel, logLevel)
 	ctx = context.WithValue(ctx, env.Environment, environment)
 
 	logger, err := zapLogger.New(
@@ -69,7 +70,7 @@ func main() {
 
 	gnrtr := generator.New(appConfig)
 
-	application := app.New(service, version, environment, appConfig, logger, gnrtr)
+	application := app.New(appConfig, logger, gnrtr)
 
 	application.Run(ctx)
 	application.Shutdown()
