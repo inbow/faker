@@ -9,7 +9,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	errch "github.com/proxeter/errors-channel"
 	"github.com/savsgio/atreugo/v11"
-	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/reuseport"
 	"go.uber.org/zap"
 
@@ -27,11 +26,13 @@ type (
 
 		generator generator.IGenerator
 	}
+)
 
-	HandlerResponse struct {
-		StatusCode int
-		Body       []byte
-	}
+type UserValue string
+
+const (
+	URL   UserValue = "url"
+	Price UserValue = "price"
 )
 
 func New(
@@ -74,29 +75,32 @@ func (s *Server) Start(ctx context.Context) error {
 	apiV1Path.UseBefore(s.beforeMiddleware)
 	apiV1Path.UseAfter(s.afterMiddleware)
 
-	apiV1Path.GET("/zeropark", s.ZeroParkPopunder)
 	apiV1Path.GET("/zeropark/push", s.ZeroParkPush)
+	apiV1Path.GET("/zeropark/popunder", s.ZeroParkPopunder)
 
 	apiV1Path.GET("/propellerads/push", s.PropellerAdsPush)
-	apiV1Path.GET("/propellerads/custom", s.PropellerAdsCustom)
+	apiV1Path.GET("/propellerads/popunder", s.PropellerAdsPopunder)
 
-	apiV1Path.GET("/chevrolet", s.ChevroletPush)
+	apiV1Path.GET("/chevrolet/push", s.ChevroletPush)
 	apiV1Path.POST("/chevrolet/impression", s.ChevroletImpression)
+
+	apiV1Path.GET("/evadav/popunder", s.EvadavPopunder)
 
 	apiV1Path.GET("/meetads", s.MeetAdsXML)
 	apiV1Path.GET("/intango", s.IntangoXML)
-	apiV1Path.GET("/evadav", s.Evadav)
 	apiV1Path.GET("/datsun", s.Datsun)
 	apiV1Path.GET("/volvo", s.Volvo)
 	apiV1Path.GET("/mazda", s.Mazda)
 
-	apiV1Path.POST("/openrtb", s.OpenRTB)
-	apiV1Path.GET("/openrtb/burl", s.OpenRTBBiddingURL)
-	apiV1Path.GET("/openrtb/nurl", s.OpenRTBNotificationURL)
-	apiV1Path.GET("/openrtb/lurl", s.OpenRTBLossURL)
+	apiV1Path.POST("/openrtb/banner", s.OpenRTBBanner)
+	apiV1Path.POST("/openrtb/popunder", s.OpenRTBPopunder)
 
 	apiV1Path.POST("/openrtb/native", s.OpenRTBNative)
 	apiV1Path.POST("/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
+
+	apiV1Path.GET("/openrtb/loss_url", s.OpenRTBLossURL)
+	apiV1Path.GET("/openrtb/notice_url", s.OpenRTBNoticeURL)
+	apiV1Path.GET("/openrtb/bidding_url", s.OpenRTBBiddingURL)
 
 	rootPath.GET("/check", s.check)
 	rootPath.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
@@ -112,16 +116,6 @@ func (s *Server) Start(ctx context.Context) error {
 	}
 }
 
-func (s *Server) price(args *fasthttp.Args) float64 {
-	return args.GetUfloatOrZero("price")
-}
-
-func (s *Server) NewResponse() *HandlerResponse {
-	return &HandlerResponse{
-		StatusCode: http.StatusNoContent,
-	}
-}
-
 func (s *Server) beforeMiddleware(ctx *atreugo.RequestCtx) error {
 	skip := ctx.QueryArgs().GetBool("skip")
 
@@ -129,6 +123,12 @@ func (s *Server) beforeMiddleware(ctx *atreugo.RequestCtx) error {
 		ctx.SetStatusCode(http.StatusNoContent)
 		return nil
 	}
+
+	price := ctx.QueryArgs().GetUfloatOrZero("price")
+	ctx.SetUserValue(string(Price), price)
+
+	url := string(ctx.QueryArgs().Peek("url"))
+	ctx.SetUserValue(string(URL), url)
 
 	return ctx.Next()
 }

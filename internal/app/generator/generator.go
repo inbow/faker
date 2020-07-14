@@ -2,35 +2,45 @@ package generator
 
 import (
 	"net/url"
+	"strconv"
 	"strings"
 
 	rd "github.com/Pallinder/go-randomdata"
+
+	"github.com/oxyd-io/faker/internal/app/config"
 )
 
 type (
-	Generator struct{}
+	Generator struct {
+		config *config.AppConfig
+	}
 )
 
-func New() IGenerator {
-	return &Generator{}
+func New(config *config.AppConfig) IGenerator {
+	return &Generator{
+		config: config,
+	}
 }
 
-func (g *Generator) Price(priceModel PriceModel) float64 {
-	price := rd.Decimal(5, 9)
-	price /= 10 // Can't generate from 0.5 to 0.9 with this library :(
+func (g *Generator) PriceOrDefault(price float64, priceModel PriceModel) float64 {
+	if price != 0 {
+		return price
+	}
 
-	if priceModel == CPC {
-		price /= 1000
+	price = rd.Decimal(5, 9) / 10 // Can't generate from 0.5 to 0.9 with this library :(
+
+	if priceModel == CPC || priceModel == CPV {
+		price /= Mile
 	}
 
 	return price
 }
 
-func (g *Generator) URL(urlType URLType) string {
+func (g *Generator) OpenRTBURL(handler OpenRTBHandler) string {
 	resultedURL := &url.URL{}
-	resultedURL.Scheme = "https"
-	resultedURL.Host = strings.ToLower(rd.Letters(5)) + "." + strings.ToLower(rd.Letters(3))
-	resultedURL.Path = string(urlType)
+	resultedURL.Scheme = "http"
+	resultedURL.Host = g.config.HTTP.Host + ":" + strconv.Itoa(g.config.HTTP.Port)
+	resultedURL.Path = "api/v1/openrtb/" + string(handler)
 
 	query := resultedURL.Query()
 	query.Add("ai", "${AUCTION_ID}")
@@ -45,6 +55,14 @@ func (g *Generator) URL(urlType URLType) string {
 	resultedURL.RawQuery = unescapedQuery
 
 	return resultedURL.String()
+}
+
+func (g *Generator) URLOrDefault(url string) string {
+	if url != "" {
+		return url
+	}
+
+	return "http://" + strings.ToLower(rd.Letters(5)) + "." + strings.ToLower(rd.Letters(3))
 }
 
 func (g *Generator) AdMarkup() string {

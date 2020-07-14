@@ -35,6 +35,7 @@ func main() {
 	ctx := grace.ShutdownContext(context.Background())
 	ctx = context.WithValue(ctx, env.Name, service)
 	ctx = context.WithValue(ctx, env.Version, version)
+	ctx = context.WithValue(ctx, env.LogLevel, logLevel)
 	ctx = context.WithValue(ctx, env.Environment, environment)
 
 	logger, err := zapLogger.New(
@@ -64,9 +65,12 @@ func main() {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
 
-	gnrtr := generator.New()
+	hostname, _ := os.Hostname()
+	appConfig.HTTP.Host = hostname
 
-	application := app.New(service, version, environment, appConfig, logger, gnrtr)
+	gnrtr := generator.New(appConfig)
+
+	application := app.New(appConfig, logger, gnrtr)
 
 	application.Run(ctx)
 	application.Shutdown()

@@ -7,11 +7,12 @@ import (
 type (
 	AppConfig struct {
 		HTTP struct {
-			Host  string
-			Port  int
-			Check struct {
-				Host string
-			}
+			Host string `mapstructure:"host"`
+			Port int    `mapstructure:"port"`
+
+			HealthCheck struct {
+				Host string `mapstructure:"host"`
+			} `mapstructure:"check"`
 		}
 
 		Bid struct {

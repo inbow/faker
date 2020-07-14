@@ -37,21 +37,9 @@ type (
 )
 
 func (s *Server) ZeroParkPopunder(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/xml")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
 	par := ZeroParkResponse{
 		XMLName:    xml.Name{Local: "result"},
-		Bid:        price,
+		Bid:        s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPV),
 		URL:        "http://usd.odysseus-nua.com/zcvisitor/c5aa6ef8-b211",
 		ClickID:    "c5aa6ef8-b211-11e9-affe-12bbd5c93ce2",
 		CampaignID: "c5ad0707-b211-11e9-affe-12bbd5c93ce2",
@@ -59,31 +47,20 @@ func (s *Server) ZeroParkPopunder(ctx *atreugo.RequestCtx) error {
 
 	data, err := xml.MarshalIndent(par, "", "")
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/xml")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }
 
 func (s *Server) ZeroParkPush(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	_ = s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/json")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
 	zrppr := ZeroParkPushResponse{
 		Title: kozma.Say(),
 		Text:  kozma.Say(),
@@ -92,7 +69,7 @@ func (s *Server) ZeroParkPush(ctx *atreugo.RequestCtx) error {
 		ImageURL:      "https://push.example.com/imp/dc3e7a05-e267-4a7a-88be-cec6e79f5d3d/1/{token}",
 		ImpressionURL: "https://push.example.com/imp/dc3e7a05-e267-4a7a-88be-cec6e79f5d3d/1/{token}",
 
-		CPC: s.generator.Price(generator.CPC),
+		CPC: s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPC),
 
 		AdID: uuid.New().String(),
 
@@ -101,14 +78,15 @@ func (s *Server) ZeroParkPush(ctx *atreugo.RequestCtx) error {
 
 	data, err := json.Marshal(zrppr)
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }

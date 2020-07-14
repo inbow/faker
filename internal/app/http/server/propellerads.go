@@ -5,10 +5,12 @@ import (
 
 	jsoniter "github.com/json-iterator/go"
 	"github.com/savsgio/atreugo/v11"
+
+	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
 type (
-	PropellerAdsCustomResponse struct {
+	PropellerAdsPopunderResponse struct {
 		Bid float64 `json:"bid"`
 		URL string  `json:"url"`
 	}
@@ -37,51 +39,28 @@ type (
 	}
 )
 
-func (s *Server) PropellerAdsCustom(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/json")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
-	par := PropellerAdsCustomResponse{
-		Bid: price,
+func (s *Server) PropellerAdsPopunder(ctx *atreugo.RequestCtx) error {
+	par := PropellerAdsPopunderResponse{
+		Bid: s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPV),
 		URL: "http://digitaldsp.com/api/win_request?p=Z",
 	}
 
 	data, err := jsoniter.Marshal(par)
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }
 
 func (s *Server) PropellerAdsPush(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/json")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
 	par := PropellerAdsPushResponse{
 		Ads: Ads{
 			BannerID:      123213,
@@ -92,22 +71,23 @@ func (s *Server) PropellerAdsPush(ctx *atreugo.RequestCtx) error {
 			Image:         "https://offerimage.com/www/images/img.jpg",
 			ClickURL:      "https://offers.propellerads.com/some_log_click_path?some_param=1",
 			ImpressionURL: "https://offers.propellerads.com/some_log_impression_path?some_param=1",
-			CPCRate:       price,
-			Rate:          price,
+			CPCRate:       s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPC),
+			Rate:          s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPC),
 			RateModel:     "cpc",
 		},
 	}
 
 	data, err := jsoniter.Marshal(par)
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }

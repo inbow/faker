@@ -8,20 +8,9 @@ import (
 )
 
 func (s *Server) OpenRTBNativeMultiBid(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	_ = s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/json")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
-	response.StatusCode = http.StatusOK
-	response.Body = openRTBNativeMultiBid
+	ctx.Response.Header.Set("Content-Type", "application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(openRTBNativeMultiBid)
 
 	return nil
 }

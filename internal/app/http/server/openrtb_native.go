@@ -12,49 +12,32 @@ import (
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
-// nolint:funlen
 func (s *Server) OpenRTBNative(ctx *atreugo.RequestCtx) error {
-	response := s.NewResponse()
-	price := s.price(ctx.QueryArgs())
-
-	defer func() {
-		ctx.Response.Header.Set("Content-Type", "application/json")
-		ctx.SetStatusCode(response.StatusCode)
-
-		if response.StatusCode != http.StatusNoContent && len(response.Body) > 0 {
-			ctx.SetBody(response.Body)
-		}
-	}()
-
 	bidRequest := openrtb.BidRequest{}
 	if err := jsoniter.Unmarshal(ctx.PostBody(), &bidRequest); err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
 	if err := bidRequest.Validate(); err != nil {
-		response.StatusCode = http.StatusBadRequest
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
 	bid := openrtb.Bid{
-		ID:       randomdata.RandStringRunes(15),
-		ImpID:    bidRequest.Impressions[0].ID,
+		ID:    randomdata.RandStringRunes(15),
+		ImpID: bidRequest.Impressions[0].ID,
+
+		Price:    s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPM),
 		AdMarkup: openRTBNativeAdm,
 
-		BillingURL: s.generator.URL(generator.BURL),
-		NoticeURL:  s.generator.URL(generator.NURL),
-		LossURL:    s.generator.URL(generator.LURL),
-	}
-
-	if price != 0 {
-		bid.Price = price
-	} else {
-		bid.Price = s.generator.Price(generator.CPM)
+		LossURL:    s.generator.OpenRTBURL(generator.LossURL),
+		NoticeURL:  s.generator.OpenRTBURL(generator.NoticeURL),
+		BillingURL: s.generator.OpenRTBURL(generator.BiddingURL),
 	}
 
 	seatBid := openrtb.SeatBid{
@@ -69,14 +52,15 @@ func (s *Server) OpenRTBNative(ctx *atreugo.RequestCtx) error {
 
 	data, err := jsoniter.Marshal(bidResponse)
 	if err != nil {
-		response.StatusCode = http.StatusBadGateway
-		response.Body = []byte(err.Error())
+		ctx.SetStatusCode(http.StatusBadGateway)
+		ctx.SetBody([]byte(err.Error()))
 
 		return nil
 	}
 
-	response.StatusCode = http.StatusOK
-	response.Body = data
+	ctx.Response.Header.Set("Content-Type", "application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	ctx.SetBody(data)
 
 	return nil
 }

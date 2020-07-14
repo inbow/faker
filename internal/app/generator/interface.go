@@ -2,8 +2,10 @@ package generator
 
 type (
 	IGenerator interface {
-		Price(PriceModel) float64
-		URL(URLType) string
+		PriceOrDefault(float64, PriceModel) float64
+		URLOrDefault(string) string
 		AdMarkup() string
+
+		OpenRTBURL(OpenRTBHandler) string
 	}
 )
