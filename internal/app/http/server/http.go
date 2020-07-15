@@ -85,11 +85,14 @@ func (s *Server) Start(ctx context.Context) error {
 	apiV1Path.POST("/chevrolet/impression", s.ChevroletImpression)
 
 	apiV1Path.GET("/evadav/popunder", s.EvadavPopunder)
+	apiV1Path.GET("/evadav/push", s.EvadavPush)
+
 
 	apiV1Path.GET("/meetads", s.MeetAdsXML)
 	apiV1Path.GET("/intango", s.IntangoXML)
 	apiV1Path.GET("/datsun", s.Datsun)
 	apiV1Path.GET("/volvo", s.Volvo)
+	apiV1Path.GET("/mack/push", s.MackPush)
 	apiV1Path.GET("/mazda", s.Mazda)
 
 	apiV1Path.POST("/openrtb/banner", s.OpenRTBBanner)
