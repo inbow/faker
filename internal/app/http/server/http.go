@@ -87,6 +87,7 @@ func (s *Server) Start(ctx context.Context) error {
 	apiV1Path.GET("/evadav/popunder", s.EvadavPopunder)
 	apiV1Path.GET("/evadav/push", s.EvadavPush)
 
+	apiV1Path.GET("/ford/push", s.FordPush)
 
 	apiV1Path.GET("/meetads", s.MeetAdsXML)
 	apiV1Path.GET("/intango", s.IntangoXML)
