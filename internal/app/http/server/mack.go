@@ -12,17 +12,16 @@ import (
 	"github.com/oxyd-io/faker/internal/app/generator"
 )
 
-
 func (s *Server) MackPush(ctx *atreugo.RequestCtx) error {
 	handlerResponse := &atom.MackPushResponse{
 
-		Id:    uuid.New().String(),
-		Title: kozma.Say(),
+		Id:          uuid.New().String(),
+		Title:       kozma.Say(),
 		Description: kozma.Say(),
-		Icon:  "https://push.example.com/icon/dc3e7a05-e267-4a7a-88be-cec6edf9fmack",
-		Image: "https://push.example.com/image/dc3e7a05-e267-4a7a-88be-cec6e7asdf9fmack",
-		Link:  s.generator.URLOrDefault(ctx.UserValue(string(URL)).(string)),
-		Price:   s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPV),
+		Icon:        "https://push.example.com/icon/dc3e7a05-e267-4a7a-88be-cec6edf9fmack",
+		Image:       "https://push.example.com/image/dc3e7a05-e267-4a7a-88be-cec6e7asdf9fmack",
+		Link:        s.generator.URLOrDefault(ctx.UserValue(string(URL)).(string)),
+		Price:       s.generator.PriceOrDefault(ctx.UserValue(string(Price)).(float64), generator.CPV),
 	}
 
 	data, err := jsoniter.Marshal(handlerResponse)
