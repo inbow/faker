@@ -1,6 +1,6 @@
 module github.com/oxyd-io/faker
 
-go 1.14
+go 1.15
 
 require (
 	github.com/Pallinder/go-randomdata v1.2.0
@@ -14,6 +14,7 @@ require (
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/oxyd-io/atom v0.2.0
+	github.com/oxyd-io/go-logger v0.1.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v0.9.4
 	github.com/prometheus/procfs v0.0.3 // indirect

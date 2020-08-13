@@ -1,18 +1,15 @@
-FROM golang:rc-buster AS build
-ARG NAME
-ENV NAME ${NAME}
-WORKDIR /opt/${NAME}
+FROM golang:1.15-buster AS build
+ARG ACTION
+WORKDIR /opt/faker
 COPY . .
-RUN ["make", "build"]
+RUN make $ACTION
 
-FROM alpine:latest
-ARG NAME
-ARG ENV
+FROM debian:buster-slim
+ARG ENVIRONMENT
 ARG LOG_LEVEL
-ENV NAME ${NAME}
 ENV ENV ${ENV}
 ENV LOG_LEVEL ${LOG_LEVEL}
-WORKDIR /opt/${NAME}
-COPY --from=build /opt/${NAME}/bin/${NAME} ./${NAME}
-COPY --from=build /opt/${NAME}/configs/${NAME}/*.yml ./configs/${NAME}/
-CMD ./${NAME} -e ${ENV} -ll ${LOG_LEVEL}
+WORKDIR /opt/faker
+COPY --from=build /opt/faker/bin/faker ./faker
+COPY --from=build /opt/faker/configs/faker/*.yml ./configs/faker/
+CMD ./faker

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/atom";
+
+message ChevroletPushResponse {
+    string impression_key = 1;
+    string impression_served_url = 2;
+    int64 slot_count = 3;
+
+    repeated ChevroletPushItemResponse articles = 4;
+}
+
+message ChevroletPushItemResponse {
+    int64 slot = 1;
+    string url = 2;
+    string title = 3;
+    string image = 4;
+    bool sponsored = 5;
+    string sponsored_by = 6;
+    double cpc = 7;
+    double score = 8;
+}

@@ -2,20 +2,18 @@ package main
 
 import (
 	"context"
-	"flag"
 	"log"
 	"math/rand"
 	"os"
 	"time"
 
 	"github.com/chapsuk/grace"
+	ll "github.com/oxyd-io/go-logger"
 	"go.uber.org/zap"
 
 	"github.com/oxyd-io/faker/internal/app"
-	"github.com/oxyd-io/faker/internal/app/config"
-	"github.com/oxyd-io/faker/internal/app/env"
-	"github.com/oxyd-io/faker/internal/app/generator"
-	zapLogger "github.com/oxyd-io/faker/internal/logger"
+	"github.com/oxyd-io/faker/internal/config"
+	"github.com/oxyd-io/faker/pkg/env"
 )
 
 var (
@@ -24,43 +22,29 @@ var (
 )
 
 func main() {
-	var environment, logLevel string
-
 	rand.Seed(time.Now().UnixNano())
-
-	flag.StringVar(&environment, "e", "", "environment")
-	flag.StringVar(&logLevel, "ll", "info", "logging level")
-	flag.Parse()
-
 	ctx := grace.ShutdownContext(context.Background())
+
+	var environment, logLevel string
+	logLevel = os.Getenv("LOG_LEVEL")
+	environment = os.Getenv("ENVIRONMENT")
+
 	ctx = context.WithValue(ctx, env.Name, service)
 	ctx = context.WithValue(ctx, env.Version, version)
 	ctx = context.WithValue(ctx, env.LogLevel, logLevel)
 	ctx = context.WithValue(ctx, env.Environment, environment)
 
-	logger, err := zapLogger.New(
-		service,
-		version,
-		environment,
-		logLevel,
-	)
+	logger, err := ll.New(service, version, environment, logLevel)
 	if err != nil {
 		log.Fatal("error while init logger", zap.Error(err))
 	}
-
-	logger.Info(
-		"flags",
-		zap.String("version", version),
-		zap.String("environment", environment),
-		zap.String("log_level", logLevel),
-	)
 
 	appPath := "."
 	if len(os.Getenv("APP_PATH")) > 0 {
 		appPath = os.Getenv("APP_PATH")
 	}
 
-	appConfig, err := config.NewAppConfig(service, appPath+"/configs/"+service+"/"+environment+".yml")
+	appConfig, err := config.New(service, appPath+"/configs/"+service+"/"+environment+".yml")
 	if err != nil {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
@@ -68,9 +52,7 @@ func main() {
 	hostname, _ := os.Hostname()
 	appConfig.HTTP.Host = hostname
 
-	gnrtr := generator.New(appConfig)
-
-	application := app.New(appConfig, logger, gnrtr)
+	application := app.New(appConfig, logger)
 
 	application.Run(ctx)
 	application.Shutdown()
