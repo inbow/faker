@@ -16,9 +16,12 @@ import (
 	"github.com/oxyd-io/faker/pkg/env"
 )
 
+const (
+	service = "faker"
+)
+
 var (
 	version = "unknown"
-	service = "unknown"
 )
 
 func main() {

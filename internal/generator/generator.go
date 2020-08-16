@@ -52,7 +52,3 @@ func URLOrDefault(url string) string {
 
 	return "http://" + strings.ToLower(rd.Letters(5)) + "." + strings.ToLower(rd.Letters(3))
 }
-
-func AdMarkup() string {
-	return `<html><head></head><body>Hello World</body></html>`
-}

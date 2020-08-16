@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message EvadavPopunderResponse {
+    string link = 1;
+    double cpc = 2;
+}
+
+message EvadavPushResponse {
+    string   id = 1;
+    string  title = 2;
+    string  descr = 3;
+    string  icon = 4;
+    string  image = 5;
+    string  link = 6;
+    double cpc = 7;
+}
