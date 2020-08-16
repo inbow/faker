@@ -33,7 +33,6 @@ api:
 .PHONY: lint
 lint:
 	@which golangci-lint &>/dev/null || GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-	$(MAKE) -f $(THIS_FILE) tidy
 	golangci-lint run --enable-all --disable gomnd --disable dupl --disable gochecknoglobals --disable gofumpt
 
 .PHONY: tests
