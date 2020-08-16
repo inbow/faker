@@ -52,12 +52,12 @@ clean:
 	@-rm -rf bin/${NAME}
 
 .PHONY: build
-build: tidy clean
+build: clean
 	@echo "Build: ${NAME}"
 	${BUILD_CMD}
 
 .PHONY: build_debug
-build_debug: tidy clean
+build_debug: clean
 	@echo "Build debug: ${NAME}"
 	${DEBUG_CMD}
 
