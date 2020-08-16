@@ -63,22 +63,13 @@ func (s *Server) OpenRTBBanner(requestCtx *atreugo.RequestCtx) error {
 }
 
 func (s *Server) OpenRTBNoticeURL(requestCtx *atreugo.RequestCtx) error {
-	requestCtx.SetStatusCode(http.StatusOK)
-	requestCtx.SetBody([]byte("Success notification url notify"))
-
-	return nil
+	return requestCtx.TextResponse("Success notification url notify", http.StatusOK)
 }
 
 func (s *Server) OpenRTBBiddingURL(requestCtx *atreugo.RequestCtx) error {
-	requestCtx.SetStatusCode(http.StatusOK)
-	requestCtx.SetBody([]byte("Success bidding url notify"))
-
-	return nil
+	return requestCtx.TextResponse("Success bidding url notify", http.StatusOK)
 }
 
 func (s *Server) OpenRTBLossURL(requestCtx *atreugo.RequestCtx) error {
-	requestCtx.SetStatusCode(http.StatusOK)
-	requestCtx.SetBody([]byte("Success loss url notify"))
-
-	return nil
+	return requestCtx.TextResponse("Success loss url notify", http.StatusOK)
 }

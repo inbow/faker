@@ -5,21 +5,21 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/oxyd-io/atom"
 	"github.com/savsgio/atreugo/v11"
 	"github.com/tada-team/kozma"
 
+	"github.com/oxyd-io/faker/api"
 	"github.com/oxyd-io/faker/internal/generator"
 )
 
 func (s *Server) ChevroletPush(requestCtx *atreugo.RequestCtx) error {
-	chevroletResponse := atom.ChevroletPushResponse{
+	chevroletResponse := api.ChevroletPushResponse{
 		ImpressionKey:       uuid.New().String(),
 		ImpressionServedUrl: fmt.Sprintf("https://%v:%v/api/v1/chevrolet/impression", s.config.HTTP.Host, s.config.HTTP.Port),
 		SlotCount:           1,
 	}
 
-	chevroletResponseItem := &atom.ChevroletPushItemResponse{
+	chevroletResponseItem := &api.ChevroletPushItemResponse{
 		Slot:  1,
 		Url:   generator.URLOrDefault(requestCtx.UserValue(string(URL)).(string)),
 		Title: kozma.Say(),
