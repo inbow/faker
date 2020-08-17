@@ -22,7 +22,7 @@ type (
 	}
 )
 
-func (s *Server) Buick(requestCtx *atreugo.RequestCtx) error {
+func (s *Server) BuickPush(requestCtx *atreugo.RequestCtx) error {
 	response := BuickResponse{
 		&ResponseItem{
 			AdID:     "20",

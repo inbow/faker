@@ -69,32 +69,56 @@ func (s *Server) Start(ctx context.Context) error {
 	apiV1Path.UseBefore(s.beforeMiddleware)
 	apiV1Path.UseAfter(s.afterMiddleware)
 
-	apiV1Path.GET("/zeropark/push", s.ZeroParkPush)
-	apiV1Path.GET("/zeropark/popunder", s.ZeroParkPopunder)
+	apiV1Path.GET("/aesearch/push", s.AesearchPush)
 
-	apiV1Path.GET("/propellerads/push", s.PropellerAdsPush)
-	apiV1Path.GET("/propellerads/popunder", s.PropellerAdsPopunder)
+	apiV1Path.GET("/audi/popunder", s.AudiPopunder)
+
+	apiV1Path.GET("/buick/push", s.BuickPush)
 
 	apiV1Path.GET("/chevrolet/push", s.ChevroletPush)
 	apiV1Path.POST("/chevrolet/impression", s.ChevroletImpression)
 
-	apiV1Path.GET("/mazda/popunder", s.Mazda)
-	apiV1Path.GET("/meetads/popunder", s.MeetAds)
-	apiV1Path.GET("/evadav/popunder", s.EvadavPopunder)
+	apiV1Path.GET("/datsun/native", s.DatsunNative)
 
-	apiV1Path.GET("/volvo/push", s.Volvo)
-	apiV1Path.GET("/datsun/push", s.Datsun)
+	apiV1Path.GET("/evadav/popunder", s.EvadavPopunder)
+	apiV1Path.GET("/evadav/push", s.EvadavPush)
+
+	apiV1Path.GET("/ford/push", s.FordPush)
+
 	apiV1Path.GET("/intango/push", s.Intango)
+
+	apiV1Path.GET("/jaguar/push", s.JaguarPush)
+	apiV1Path.GET("/jaguar/native", s.JaguarNative)
+
+	apiV1Path.GET("/mack/push", s.MackPush)
+
+	apiV1Path.GET("/mazda/popunder", s.MazdaPopunder)
+
+	apiV1Path.GET("/meetads/popunder", s.MeetAds)
+
+	apiV1Path.GET("/mgid/push", s.MgidPush)
 
 	apiV1Path.POST("/openrtb/banner", s.OpenRTBBanner)
 	apiV1Path.POST("/openrtb/popunder", s.OpenRTBPopunder)
-
 	apiV1Path.POST("/openrtb/native", s.OpenRTBNative)
 	apiV1Path.POST("/openrtb/native/multibid", s.OpenRTBNativeMultiBid)
 
 	apiV1Path.GET("/openrtb/loss_url", s.OpenRTBLossURL)
 	apiV1Path.GET("/openrtb/notice_url", s.OpenRTBNoticeURL)
 	apiV1Path.GET("/openrtb/bidding_url", s.OpenRTBBiddingURL)
+
+	apiV1Path.GET("/peugeot/push", s.PeugeotPush)
+	apiV1Path.GET("/peugeot/popunder", s.PeugeotPopunder)
+
+	apiV1Path.GET("/pontiac/popunder", s.PontiacPopunder)
+
+	apiV1Path.GET("/propellerads/push", s.PropellerAdsPush)
+	apiV1Path.GET("/propellerads/popunder", s.PropellerAdsPopunder)
+
+	apiV1Path.GET("/volvo/push", s.Volvo)
+
+	apiV1Path.GET("/zeropark/push", s.ZeroParkPush)
+	apiV1Path.GET("/zeropark/popunder", s.ZeroParkPopunder)
 
 	rootPath.GET("/check", s.check)
 	rootPath.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())

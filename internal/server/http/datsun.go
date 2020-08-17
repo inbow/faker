@@ -23,7 +23,7 @@ type (
 	}
 )
 
-func (s *Server) Datsun(requestCtx *atreugo.RequestCtx) error {
+func (s *Server) DatsunNative(requestCtx *atreugo.RequestCtx) error {
 	response := datsunResponse{
 		Teasers: []Teaser{
 			{

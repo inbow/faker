@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/oxyd-io/faker/api"
 	"net/http"
 
 	"github.com/savsgio/atreugo/v11"
@@ -8,17 +9,10 @@ import (
 	"github.com/oxyd-io/faker/internal/generator"
 )
 
-type (
-	mazdaResponse struct {
-		Link  string  `json:"url"`
-		Price float64 `json:"cpc"`
-	}
-)
-
-func (s *Server) Mazda(requestCtx *atreugo.RequestCtx) error {
-	response := mazdaResponse{
-		Link:  generator.URLOrDefault(requestCtx.UserValue(string(URL)).(string)),
-		Price: generator.PriceOrDefault(requestCtx.UserValue(string(Price)).(float64), generator.CPV),
+func (s *Server) MazdaPopunder(requestCtx *atreugo.RequestCtx) error {
+	response := api.MazdaItemResponse{
+		Url: generator.URLOrDefault(requestCtx.UserValue(string(URL)).(string)),
+		Cpc: generator.PriceOrDefault(requestCtx.UserValue(string(Price)).(float64), generator.CPV),
 	}
 
 	return requestCtx.JSONResponse(&response, http.StatusOK)

@@ -23,7 +23,7 @@ type (
 	}
 )
 
-func (s *Server) Mgid(requestCtx *atreugo.RequestCtx) error {
+func (s *Server) MgidPush(requestCtx *atreugo.RequestCtx) error {
 	response := datsunResponse{
 		Teasers: []Teaser{
 			{

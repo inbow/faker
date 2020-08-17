@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message PeugeotResponse {
+  repeated PeugeotItemResponse result = 1;
+}
+
+message PeugeotItemResponse {
+  double cpc = 1;
+  string url = 2;
+  string title = 3;
+  string description = 4;
+  string icon = 5;
+  string image = 6;
+  string ad_id = 7;
+}
