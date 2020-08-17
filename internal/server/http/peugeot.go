@@ -3,10 +3,10 @@ package http
 import (
 	"net/http"
 
-	"github.com/oxyd-io/faker/api"
 	"github.com/savsgio/atreugo/v11"
 	"github.com/tada-team/kozma"
 
+	"github.com/oxyd-io/faker/api"
 	"github.com/oxyd-io/faker/internal/generator"
 )
 

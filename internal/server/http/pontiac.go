@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/oxyd-io/faker/api"
 	"net/http"
 
 	"github.com/savsgio/atreugo/v11"
 
+	"github.com/oxyd-io/faker/api"
 	"github.com/oxyd-io/faker/internal/generator"
 )
 

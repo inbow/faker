@@ -1,11 +1,12 @@
 package http
 
 import (
-	"github.com/oxyd-io/faker/internal/generator"
-	"github.com/tada-team/kozma"
 	"net/http"
 
 	"github.com/savsgio/atreugo/v11"
+	"github.com/tada-team/kozma"
+
+	"github.com/oxyd-io/faker/internal/generator"
 )
 
 type (
