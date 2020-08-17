@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message AudiResponse {
+  double cpc = 1;
+  string click_url = 2;
+}

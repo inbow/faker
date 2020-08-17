@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	Teaser struct {
+	MgidItem struct {
 		ID    string  `json:"id,omitempty"`
 		Title string  `json:"title,omitempty"`
 		Image string  `json:"image,omitempty"`
@@ -18,12 +18,12 @@ type (
 		CPC   float64 `json:"cpc,omitempty"`
 	}
 
-	datsunResponse struct {
-		Teasers []Teaser `json:"teasers"`
+	MgidResponse struct {
+		Teasers []MgidItem `json:"teasers"`
 	}
 )
 
-func (s *Server) DatsunNative(requestCtx *atreugo.RequestCtx) error {
+func (s *Server) MgidPush(requestCtx *atreugo.RequestCtx) error {
 	response := datsunResponse{
 		Teasers: []Teaser{
 			{

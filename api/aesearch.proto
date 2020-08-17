@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message AesearchResponse {
+  Result result = 1;
+}
+
+message Result {
+  repeated AesearchItemResponse listing = 1;
+}
+
+message AesearchItemResponse {
+  string title = 1;
+  string host = 2;
+  string descr = 3;
+  string icon = 4;
+  string image = 5;
+  string url = 6;
+  string pixel = 7;
+  double bid = 8;
+}

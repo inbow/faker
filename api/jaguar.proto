@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message JaguarResponse {
+  repeated JaguarItemResponse articles = 1;
+}
+
+message JaguarItemResponse {
+  int64 banner_id = 1;
+  int64 campaign_id = 2;
+  string title = 3;
+  string text = 4;
+  string icon = 5;
+  string image = 6;
+  string click_url = 7;
+  string impression_url = 8;
+  double cpc_rate = 9;
+  double rate = 10;
+  string rate_model = 11;
+  int64 code = 12;
+  string message = 13;
+}

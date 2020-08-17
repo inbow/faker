@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message MazdaItemResponse {
+  string url = 1;
+  double cpc = 2;
+  string status = 3;
+}
