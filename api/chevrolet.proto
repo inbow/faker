@@ -1,11 +1,12 @@
 syntax = "proto3";
 
-option go_package = "github.com/oxyd-io/atom";
+option go_package = "github.com/oxyd-io/faker/api";
 
 message ChevroletPushResponse {
-    string impression_key = 1;
-    string impression_served_url = 2;
-    int64 slot_count = 3;
+    int64 slot_count = 1;
+
+    string impression_key = 2;
+    string impression_served_url = 3;
 
     repeated ChevroletPushItemResponse articles = 4;
 }

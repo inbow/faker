@@ -187,8 +187,6 @@ github.com/onsi/gomega v1.7.0/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1Cpa
 github.com/onsi/gomega v1.7.1/go.mod h1:XdKZgCCFLUoM/7CFJVPcG8C1xQ1AJ0vpAezJrB7JYyY=
 github.com/onsi/gomega v1.9.0 h1:R1uwffexN6Pr340GtYRIdZmAiN4J+iw6WG4wog1DUXg=
 github.com/onsi/gomega v1.9.0/go.mod h1:Ho0h+IUsWyvy1OpqCwxlQ/21gkhVunqlU8fDGcoTdcA=
-github.com/oxyd-io/atom v0.2.0 h1:DA+C3T77HhzzQfwwwUJCCfhsAs42WVlrfRdNXO9c88U=
-github.com/oxyd-io/atom v0.2.0/go.mod h1:fZC52dtKBuPos1MVUNaPl7azMP+XXfuJhzGhXFvKl8k=
 github.com/oxyd-io/go-logger v0.1.0 h1:3K6JcKDE+yFmEn/BoKg7wKUPcE4hJMAHgY4oNaErIfQ=
 github.com/oxyd-io/go-logger v0.1.0/go.mod h1:SnWO3tuaby3D3laP0/OAYndFQL2NbTDTTluJtoGg+bg=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=

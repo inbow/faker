@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/oxyd-io/faker/api";
+
+message MackPushResponse {
+  string id = 1;
+  string crid = 2;
+  string title = 3 ;
+  string description = 4;
+  string link = 5;
+  string icon = 6;
+  string image = 7;
+  string nurl = 8;
+  double price = 9;
+}
