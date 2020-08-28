@@ -14,7 +14,8 @@ const (
 )
 
 const (
-	LossURL    OpenRTBHandler = "loss_url"
-	NoticeURL  OpenRTBHandler = "notice_url"
-	BiddingURL OpenRTBHandler = "bidding_url"
+	LossURL       OpenRTBHandler = "loss_url"
+	NoticeURL     OpenRTBHandler = "notice_url"
+	BiddingURL    OpenRTBHandler = "bidding_url"
+	ImpressionURL OpenRTBHandler = "impression_url"
 )

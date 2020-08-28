@@ -1,5 +1,4 @@
 http:
-  host:
   port: 49385
 
 bid:

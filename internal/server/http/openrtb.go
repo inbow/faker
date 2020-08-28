@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Pallinder/go-randomdata"
@@ -34,12 +35,14 @@ func (s *Server) OpenRTBBanner(requestCtx *atreugo.RequestCtx) error {
 		return nil
 	}
 
+	adMarkup := fmt.Sprintf(template, generator.OpenRTBURL(s.config, generator.ImpressionURL))
+
 	bid := openrtb.Bid{
 		ID:    randomdata.RandStringRunes(15),
 		ImpID: bidRequest.Impressions[0].ID,
 
 		Price:    generator.PriceOrDefault(requestCtx.UserValue(string(Price)).(float64), generator.CPM),
-		AdMarkup: "<html><head></head><body>Hello World</body></html>",
+		AdMarkup: adMarkup,
 
 		Width:  bidRequest.Impressions[0].Banner.Width,
 		Height: bidRequest.Impressions[0].Banner.Height,
@@ -73,3 +76,15 @@ func (s *Server) OpenRTBBiddingURL(requestCtx *atreugo.RequestCtx) error {
 func (s *Server) OpenRTBLossURL(requestCtx *atreugo.RequestCtx) error {
 	return requestCtx.TextResponse("Success loss url notify", http.StatusOK)
 }
+
+const (
+	template = `
+<html>
+	<head></head>
+	<body>
+		%s
+		Hello World
+	</body>
+</html>
+`
+)

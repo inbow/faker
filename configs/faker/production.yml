@@ -1,6 +1,5 @@
 http:
-  host:
-  port: 49385
+  host: faker.oxyd.io
 
 bid:
   delay_min: 10

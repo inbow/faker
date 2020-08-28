@@ -21,11 +21,13 @@ const (
 )
 
 var (
+	commit  = "unknown"
 	version = "unknown"
 )
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
+
 	ctx := grace.ShutdownContext(context.Background())
 
 	var environment, logLevel string
@@ -51,9 +53,6 @@ func main() {
 	if err != nil {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
-
-	hostname, _ := os.Hostname()
-	appConfig.HTTP.Host = hostname
 
 	application := app.New(appConfig, logger)
 
