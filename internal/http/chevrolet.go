@@ -15,7 +15,7 @@ import (
 func (s *Server) ChevroletPush(requestCtx *atreugo.RequestCtx) error {
 	chevroletResponse := api.ChevroletPushResponse{
 		ImpressionKey:       uuid.New().String(),
-		ImpressionServedUrl: fmt.Sprintf("https://%v:%v/api/v1/chevrolet/impression", s.config.HTTP.Host, s.config.HTTP.Port),
+		ImpressionServedUrl: fmt.Sprintf("https://%v:%v/api/v1/chevrolet/impression", s.config.HTTP.Domain, s.config.HTTP.Port),
 		SlotCount:           1,
 	}
 

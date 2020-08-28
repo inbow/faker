@@ -13,6 +13,7 @@ import (
 
 	"github.com/oxyd-io/faker/internal/app"
 	"github.com/oxyd-io/faker/internal/config"
+	"github.com/oxyd-io/faker/internal/http"
 	"github.com/oxyd-io/faker/pkg/env"
 )
 
@@ -54,7 +55,9 @@ func main() {
 		logger.Fatal("error while init config", zap.Error(err))
 	}
 
-	application := app.New(appConfig, logger)
+	httpServer := http.NewServer(ctx, logger, appConfig)
+
+	application := app.New(appConfig, logger, httpServer)
 
 	application.Run(ctx)
 	application.Shutdown()

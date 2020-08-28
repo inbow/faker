@@ -2,7 +2,6 @@ package generator
 
 import (
 	"net/url"
-	"strconv"
 	"strings"
 
 	rd "github.com/Pallinder/go-randomdata"
@@ -27,7 +26,7 @@ func PriceOrDefault(price float64, priceModel PriceModel) float64 {
 func OpenRTBURL(config *config.AppConfig, handler OpenRTBHandler) string {
 	resultedURL := &url.URL{}
 	resultedURL.Scheme = "http"
-	resultedURL.Host = config.HTTP.Host + ":" + strconv.Itoa(config.HTTP.Port)
+	resultedURL.Host = config.HTTP.Domain
 	resultedURL.Path = "api/v1/openrtb/" + string(handler)
 
 	query := resultedURL.Query()

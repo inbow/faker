@@ -7,9 +7,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	errch "github.com/proxeter/errors-channel"
 	"github.com/savsgio/atreugo/v11"
-	"github.com/valyala/fasthttp/reuseport"
 	"go.uber.org/zap"
 
 	"github.com/oxyd-io/faker/internal/config"
@@ -32,36 +30,26 @@ const (
 	Price UserValue = "price"
 )
 
-func New(
+func NewServer(
 	ctx context.Context,
 	logger *zap.Logger,
 	config *config.AppConfig,
-) <-chan error {
-	return errch.Register(func() error {
-		return (&Server{
-			ctx: ctx,
+) *Server {
+	return &Server{
+		ctx: ctx,
 
-			logger: logger,
-			config: config,
-		}).Start(ctx)
-	})
+		logger: logger,
+		config: config,
+	}
 }
 
-func (s *Server) Start(ctx context.Context) error {
+func (s *Server) Start() error {
 	server := atreugo.New(atreugo.Config{
 		Name: s.ctx.Value(env.Name).(string) + " server",
 		Addr: s.config.HTTP.Host + ":" + strconv.Itoa(s.config.HTTP.Port),
 
-		Reuseport: true,
-
 		GracefulShutdown: true,
-		Compress:         false,
 	})
-
-	ln, err := reuseport.Listen("tcp4", ":"+strconv.Itoa(s.config.HTTP.Port))
-	if err != nil {
-		return err
-	}
 
 	rootPath := server.NewGroupPath("")
 	apiV1Path := rootPath.NewGroupPath("/api/v1")
@@ -123,15 +111,17 @@ func (s *Server) Start(ctx context.Context) error {
 	rootPath.GET("/check", s.check)
 	rootPath.NetHTTPPath(http.MethodGet, "/metrics", promhttp.Handler())
 
-	s.logger.Info("Server running", zap.Int("port", s.config.HTTP.Port))
-	select {
-	case <-errch.Register(func() error { return server.ServeGracefully(ln) }):
-		s.logger.Info("Shutdown server", zap.String("reason", "error"))
-		return ln.Close()
-	case <-ctx.Done():
-		s.logger.Info("Shutdown server", zap.String("reason", "ctx.Done()"))
-		return ln.Close()
-	}
+	s.logger.Info(
+		"Server is running",
+		zap.String("host", s.config.HTTP.Host),
+		zap.Int("port", s.config.HTTP.Port),
+	)
+
+	return server.ListenAndServe()
+}
+
+func (s *Server) Stop() error {
+	return nil
 }
 
 func (s *Server) beforeMiddleware(ctx *atreugo.RequestCtx) error {
