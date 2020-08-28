@@ -7,17 +7,10 @@ import (
 type (
 	AppConfig struct {
 		HTTP struct {
-			Host string `mapstructure:"host"`
-			Port int    `mapstructure:"port"`
+			Host string `json:"host"`
+			Port int    `json:"port"`
 
-			HealthCheck struct {
-				Host string `mapstructure:"host"`
-			} `mapstructure:"check"`
-		}
-
-		Bid struct {
-			DelayMin int `mapstructure:"delay_min"`
-			DelayMax int `mapstructure:"delay_max"`
+			Domain string `json:"domain"`
 		}
 	}
 )

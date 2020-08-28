@@ -1,6 +1,3 @@
 http:
   host: faker.oxyd.io
 
-bid:
-  delay_min: 10
-  delay_max: 200
