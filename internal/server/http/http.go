@@ -50,8 +50,8 @@ func New(
 func (s *Server) Start(ctx context.Context) error {
 	server := atreugo.New(atreugo.Config{
 		Name: s.ctx.Value(env.Name).(string) + " server",
+		Addr: s.config.HTTP.Host + ":" + strconv.Itoa(s.config.HTTP.Port),
 
-		Prefork:   true,
 		Reuseport: true,
 
 		GracefulShutdown: true,
@@ -159,9 +159,6 @@ func (s *Server) afterMiddleware(ctx *atreugo.RequestCtx) error {
 	return ctx.Next()
 }
 
-func (s *Server) check(ctx *atreugo.RequestCtx) error {
-	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody([]byte("OK"))
-
-	return nil
+func (s *Server) check(requestCtx *atreugo.RequestCtx) error {
+	return requestCtx.TextResponse("OK", http.StatusOK)
 }

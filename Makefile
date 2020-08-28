@@ -1,15 +1,15 @@
 # Common
 VCS = github.com
 ORG = oxyd-io
-NAME = $(shell basename $(CURDIR))
-VERSION := $(shell git tag --points-at HEAD --sort -version:refname | head -1)
+NAME = faker
 COMMIT := $(shell git rev-parse --short HEAD)
+VERSION := $(shell git tag --points-at HEAD)
 ACTION ?= build
 
 # Build
 GO_PACKAGE = ${VCS}/${ORG}/${NAME}
 GC_FLAGS = -gcflags 'all=-N -l'
-LD_FLAGS = -ldflags '-s -v -w -X main.version=${COMMIT}'
+LD_FLAGS = -ldflags '-s -v -w -X main.commit=${COMMIT} -X main.version=${VERSION}'
 BUILD_CMD = CGO_ENABLED=0 go build -o bin/${NAME} ${LD_FLAGS} ${GO_PACKAGE}/cmd/${NAME}
 DEBUG_CMD = CGO_ENABLED=0 go build -o bin/${NAME} ${GC_FLAGS} ${GO_PACKAGE}/cmd/${NAME}
 
@@ -17,6 +17,7 @@ DEBUG_CMD = CGO_ENABLED=0 go build -o bin/${NAME} ${GC_FLAGS} ${GO_PACKAGE}/cmd/
 REGISTRY_URL = docker.pkg.github.com
 DOCKER_IMAGE_NAME = ${REGISTRY_URL}/${ORG}/${NAME}/${NAME}
 DOCKER_APP_FILENAME = deployments/docker/Dockerfile
+DOCKER_GOLANG_IMAGE = docker.pkg.github.com/oxyd-io/docker-images/go-image:1.15
 
 # Other
 .DEFAULT_GOAL = build
@@ -76,6 +77,5 @@ docker_local_push:
 
 .PHONY: docker_build_push_versioned
 docker_build_push_image:
-	docker build -t ${DOCKER_IMAGE_NAME}:${VERSION} -f ${DOCKER_APP_FILENAME} --build-arg ACTION=${ACTION} .
-	docker push ${DOCKER_IMAGE_NAME}:${VERSION}
-	docker image rm ${DOCKER_IMAGE_NAME}:${VERSION}
+	docker build -t ${DOCKER_IMAGE_NAME}:${COMMIT} -f ${DOCKER_APP_FILENAME} --build-arg ACTION=${ACTION} .
+	docker push ${DOCKER_IMAGE_NAME}:${COMMIT}
