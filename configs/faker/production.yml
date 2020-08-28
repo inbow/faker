@@ -1,3 +1,4 @@
 http:
-  host: faker.oxyd.io
+  port: 49385
+  domain: faker.oxyd.io
 
